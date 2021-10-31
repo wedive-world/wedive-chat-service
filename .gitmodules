@@ -1,0 +1,3 @@
+[submodule "wedive-secret"]
+	path = wedive-secret
+	url = git@github.com:wedive-world/wedive-secret.git
