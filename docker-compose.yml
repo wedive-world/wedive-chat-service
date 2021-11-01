@@ -1,0 +1,18 @@
+version: '3.8'
+
+services: 
+  chat-service:
+    container_name: chat-service
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: wedive/chat-service
+    ports: 
+      - "4510:4000"
+    restart: unless-stopped
+    networks: 
+      - rocketchat-network
+      
+networks:
+  rocketchat-network:
+    external: true
