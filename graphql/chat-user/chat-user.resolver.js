@@ -1,4 +1,4 @@
-const RocketChatClient = require('../../rocketchat/rocketchat-client')
+const chatUserService = require('../../service/chat-user-service')
 
 module.exports = {
 
@@ -6,8 +6,8 @@ module.exports = {
         async getChatUserById(parent, args, context, info) {
 
             console.log(`query | getChatUserById: args=${args}`)
-
-            return null
+            let user = await chatUserService.getChatUserById(args._id)
+            return user
         },
 
     },
@@ -17,10 +17,8 @@ module.exports = {
         async createChatUser(parent, args, context, info) {
 
             console.log(`mutation | createChatUser: args=${JSON.stringify(args)}`)
-            const rocketChatClient = new RocketChatClient()
-            let result = await rocketChatClient.createUser(args.email, args.name, args.userName)
-            return result
-
+            let user = await chatUserService.createUser(args._id, args.email, args.name)
+            return user
         }
     },
 };
