@@ -22,6 +22,25 @@ module.exports.getJoinedRoomList = async (_id) => {
         .map(room => convertChatRoom(room))
 }
 
+module.exports.leaveRoom = async (userId, roomId) => {
+
+    let client = new RocketChatClient()
+    let userHeader = await client.generateUserHeader(userId)
+
+    let result = await client.post(
+        '/api/v1/rooms.leave',
+        userHeader,
+        { roomId: roomId }
+    )
+
+    if (!result.success) {
+        console.log(`chat-room-service | getJoinedRoomList: failed, result=${JSON.stringify(result)}`)
+        return false
+    }
+
+    return true
+}
+
 function convertChatRoom(rocketChatRoom) {
     return {
         _id: rocketChatRoom._id,

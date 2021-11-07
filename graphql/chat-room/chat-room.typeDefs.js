@@ -6,9 +6,9 @@ type Query {
     getJoinedRoomListByUserId(_id: String): [ChatRoom]
 }
 
-# type Mutation {
-#     createChatUser(email: String!, name: String!, userName: String!): String!
-# }
+type Mutation {
+    leaveRoom(roomId: String!): Boolean!
+}
 
 # {
 #   "_id": "22nytdn4QqKvSk2Av",              // Random.id()

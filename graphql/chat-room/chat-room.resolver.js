@@ -11,7 +11,7 @@ module.exports = {
             }
 
             return chatUsers
-        }
+        },
     },
 
     Query: {
@@ -23,15 +23,12 @@ module.exports = {
 
     },
 
-    // Mutation: {
+    Mutation: {
 
-    //     async createChatUser(parent, args, context, info) {
+        async leaveRoom(parent, args, context, info) {
 
-    //         console.log(`mutation | createChatUser: args=${JSON.stringify(args)}`)
-    //         const rocketChatClient = new RocketChatClient()
-    //         let result = await rocketChatClient.createUser(args.email, args.name, args.userName)
-    //         return JSON.stringify(result)
-
-    //     }
-    // },
+            console.log(`mutation | createChatUser: args=${JSON.stringify(args)}`)
+            return await chatRoomService.leaveRoom(args.userId, args.roomId)
+        }
+    },
 };
