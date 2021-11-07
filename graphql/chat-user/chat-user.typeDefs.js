@@ -53,4 +53,13 @@ type ChatUser {
     createdAt: Date
     updatedAt: Date
 }
+
+type ChatRoom {
+    chatUsers: [ChatUser]
+    owener: ChatUser
+}
+
+type ChatMessage {
+    author: ChatUser
+}
 `;

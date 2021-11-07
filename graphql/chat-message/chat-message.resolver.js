@@ -1,24 +1,85 @@
-const chatUserService = require('../../service/chat-user-service')
+const RocketChatClient = require("../client/rocketchat-client")
+const client = new RocketChatClient()
 
 module.exports = {
 
     Query: {
-        async getChatUserById(parent, args, context, info) {
+        async getMessagesByRoomIdSinceUpdated(parent, args, context, info) {
+            console.log(`query | getMessagesByRoomIdSinceUpdated: args=${args}`)
 
-            console.log(`query | getChatUserById: args=${args}`)
-            let user = await chatUserService.getChatUserById(args._id)
-            return user
+            return await syncMessage(context.userId, args.roomId, args.updagedSince)
         },
-
     },
 
     Mutation: {
 
-        async createChatUser(parent, args, context, info) {
+        async postMessageToRoom(parent, args, context, info) {
 
-            console.log(`mutation | createChatUser: args=${JSON.stringify(args)}`)
-            let user = await chatUserService.createUser(args._id, args.email, args.name)
-            return user
-        }
+            console.log(`mutation | postMessageToRoom: args=${JSON.stringify(args)}`)
+            return await postMessage(args.roomId, args.input)
+        },
+
+        async postMessageToUser(parent, args, context, info) {
+
+            console.log(`mutation | postMessageToUser: args=${JSON.stringify(args)}`)
+            return await postMessage(`@${args.userId}`, args.input)
+        },
+
+        async postMessageToChannel(parent, args, context, info) {
+
+            console.log(`mutation | postMessageToChannel: args=${JSON.stringify(args)}`)
+            return await postMessage(`#${args.channelId}`, args.input)
+        },
     },
 };
+
+async function postMessage(roomId, text, /* attachment */) {
+
+    let userHeader = await client.generateUserHeader(userId)
+
+    let result = await client.post(
+        '/api/v1/chat.postMessage',
+        userHeader,
+        {
+            roomId: roomId,
+            text: text
+        }
+    )
+
+    if (!result.success) {
+        console.log(`chat-message-resolver | postMessage: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return convertChatMessage(result.message)
+}
+
+/* upadtedSince type: 2019-04-16T18:30:46.669Z */
+async function syncMessage(userId, roomId, updatedSince) {
+
+    let queryParams = {
+        roomId: roomId,
+        updatedSince: updatedSince
+    }
+
+    let userHeader = client.generateUserHeader(userId)
+
+    let result = await client.get('/api/v1/chat.syncMessages', userHeader, queryParams)
+    if (!result.success || !result.user) {
+        console.log(`chat-message-resolver | syncMessage: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return result.updated.map(rocketChatMessage => convertChatMessage(rocketChatMessage))
+}
+
+function convertChatMessage(rocketChatMessage) {
+    return {
+        _id: rocketChatMessage._id,
+        author: rocketChatMessage.u.username,
+        chatRoom: rocketChatMessage.rid,
+        text: rocketChatMessage.msg,
+        createdAt: rocketChatMessage.ts,
+        updatedAt: rocketChatMessage._updatedAt
+    }
+}

@@ -44,10 +44,9 @@ type ChatRoom {
     name: String
     lastMessageAt: String
     numOfmessages: Int
+
     canLeave: Boolean
     readOnly: Boolean
-    chatUsers: [ChatUser]
-    owener: ChatUser
 }
 
 enum ChatRoomType {
@@ -55,6 +54,10 @@ enum ChatRoomType {
     direct
     group
     visitor
+}
+
+type ChatMessage {
+    chatRoom: ChatRoom
 }
 
 `;

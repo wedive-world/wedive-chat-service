@@ -3,7 +3,7 @@ const { gql } = require('apollo-server')
 module.exports = gql`
 
 type Query {
-    getMessagesByRoomIdSinceUpdated(roomId: String!, updatedSince: Long): [ChatMessage]
+    getMessagesByRoomIdSinceUpdated(roomId: String!, updatedSince: Date): [ChatMessage]
 }
 
 type Mutation {
@@ -46,8 +46,6 @@ type Mutation {
 type ChatMessage {
     _id: String
     text: String
-    author: ChatUser
-    chatRoom: ChatRoom
     attachments: [Attachment]
     createdAt: Date
     updatedAt: Date
@@ -71,5 +69,9 @@ input AttachmentInput {
     imageUrl: String
     audioUrl: String
     videoUrl: String
+}
+
+type ChatRoom {
+    lastChatMessage: ChatMessage
 }
 `;
