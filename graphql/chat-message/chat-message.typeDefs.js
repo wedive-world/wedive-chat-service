@@ -9,6 +9,7 @@ type Query {
 type Mutation {
     postMessageToUser(userId: String!, input: String!): ChatMessage
     postMessageToRoom(roomId: String!, input: String!): ChatMessage
+    postMessageToChannel(channel: String!, input: String!): ChatMessage
 }
 
 # interface IUser {

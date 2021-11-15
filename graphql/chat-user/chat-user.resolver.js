@@ -1,4 +1,4 @@
-const RocketChatClient = require("../../client/rocketchat-client")
+const RocketChatClient = require("../client/rocketchat-client")
 const client = new RocketChatClient()
 
 module.exports = {
