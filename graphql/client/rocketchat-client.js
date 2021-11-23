@@ -26,32 +26,32 @@ class RocketChatClient {
         return RocketChatClient.instance
     }
 
-    async _checkAndUpdateUserCache(email) {
-        if (!this._userIdCache.has(email) || !this._userIdCache.has(email)) {
-            let result = await this.login(email)
+    async _checkAndUpdateUserCache(uid) {
+        if (!this._userIdCache.has(uid) || !this._userIdCache.has(uid)) {
+            let result = await this.login(uid)
 
             if (result.userId && result.authToken) {
 
-                this._userIdCache.set(email, result.userId)
-                this._userTokenCache.set(email, result.authToken)
+                this._userIdCache.set(uid, result.userId)
+                this._userTokenCache.set(uid, result.authToken)
             }
         }
     }
 
-    async _getUserToken(email) {
-        return this._userTokenCache.get(email)
+    async _getUserToken(uid) {
+        return this._userTokenCache.get(uid)
     }
 
-    async _getUserId(email) {
-        return this._userIdCache.get(email)
+    async _getUserId(uid) {
+        return this._userIdCache.get(uid)
     }
 
-    async login(email) {
-        const hashPassword = this.generatePassword(email)
+    async login(uid) {
+        const hashPassword = this.generatePassword(uid)
         let result = await this.post('/api/v1/login',
             this._emptyHeader,
             {
-                user: email,
+                user: uid,
                 password: hashPassword
             }
         )
@@ -61,12 +61,12 @@ class RocketChatClient {
         return result
     }
 
-    async generateUserHeader(email) {
-        await this._checkAndUpdateUserCache(email)
+    async generateUserHeader(uid) {
+        await this._checkAndUpdateUserCache(uid)
         return [
             "Content-Type:application/json",
-            `X-User-Id:${this._getUserId(email)}`,
-            `X-Auth-Token:${this._getUserToken(email)}`,
+            `X-User-Id:${this._getUserId(uid)}`,
+            `X-Auth-Token:${this._getUserToken(uid)}`,
         ]
     }
 

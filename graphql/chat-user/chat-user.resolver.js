@@ -53,13 +53,13 @@ async function getChatUserById(_id) {
 
 async function createUser(_id, email, name) {
 
-    const hashPassword = client.generatePassword(email)
+    const hashPassword = client.generatePassword(_id)
 
     const postData = {
+        username: _id,
         email: email,
         name: name,
         password: hashPassword,
-        username: _id,
         joinDefaultChannels: false,
     }
 
