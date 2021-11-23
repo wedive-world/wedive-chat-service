@@ -16,7 +16,7 @@ function applyEnvironment() {
     case 'production':
       envList.push(require('dotenv').config({ path: './wedive-secret/chat-service-config.env' }).parsed)
       envList.push(require('dotenv').config({ path: './wedive-secret/chat-service-secret.env' }).parsed)
-      
+
       break;
 
     case 'local':

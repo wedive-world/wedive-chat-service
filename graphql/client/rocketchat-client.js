@@ -4,20 +4,11 @@ class RocketChatClient {
             RocketChatClient.instance = this
         }
 
-        this.adminHeader = [
-            "Content-Type:application/json",
-            `X-User-Id:${process.env.ADMIN_USER_ID}`,
-            `X-Auth-Token:${process.env.ADMIN_TOKEN}`,
-        ]
-
         this._emptyHeader = [
             "Content-Type:application/json",
         ]
 
-        this._host = process.env.ROCKET_CHAT_URL
-
         this._curly = require('node-libcurl').curly
-        
         var LRU = require("lru-cache")
 
         this._userIdCache = new LRU(100)
@@ -36,6 +27,14 @@ class RocketChatClient {
                 this._userTokenCache.set(uid, result.authToken)
             }
         }
+    }
+
+    getAdminHeader() {
+        return [
+            "Content-Type:application/json",
+            `X-User-Id:${process.env.ADMIN_USER_ID}`,
+            `X-Auth-Token:${process.env.ADMIN_TOKEN}`,
+        ]
     }
 
     async _getUserToken(uid) {
@@ -70,30 +69,34 @@ class RocketChatClient {
         ]
     }
 
-    generatePassword(email) {
+    generatePassword(uid) {
         return require('crypto')
             .createHash('sha512')
-            .update(email)
+            .update(uid)
             .digest('hex');
+    }
+
+    _getHost() {
+        return process.env.ROCKET_CHAT_URL
     }
 
     async post(method, header, postData) {
 
+        console.log(`${this._getHost()}${method}`)
+
         try {
             const { statusCode, data, headers } = await this._curly.post(
-                `${this._host}${method}`,
+                `${this._getHost()}${method}`,
                 {
                     postFields: JSON.stringify(postData),
                     httpHeader: header
-                }
-            )
+                })
 
-            console.log(`RocketChatClient | POST: method=${method} statusCode=${JSON.stringify(statusCode)} data=${data}`)
+            console.log(`RocketChatClient | POST: method=${method} statusCode=${JSON.stringify(statusCode)} data=${JSON.stringify(data)}`)
             return data
 
         } catch (err) {
             console.log(`RocketChatClient | POST: method=${method} err=${JSON.stringify(err)}`)
-
             return err
         }
     }
@@ -102,11 +105,10 @@ class RocketChatClient {
 
         try {
             const { statusCode, data, headers } = await this._curly.get(
-                `${this._host}${method}?${require('querystring').stringify(queryParams)}`,
+                `${this._getHost()}${method}?${require('querystring').stringify(queryParams)}`,
                 {
                     httpHeader: header
-                }
-            )
+                })
             console.log(`RocketChatClient | GET: method=${method} statusCode=${JSON.stringify(statusCode)} data=${data}`)
             return data
 

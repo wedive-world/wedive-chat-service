@@ -42,7 +42,7 @@ async function getChatUserById(_id) {
         username: _id
     }
 
-    let result = await client.get('/api/v1/users.info', client.adminHeader, queryParams)
+    let result = await client.get('/api/v1/users.info', client.getAdminHeader(), queryParams)
     if (!result.success || !result.user) {
         console.log(`chat-user-service | getChatUserById: failed, result=${JSON.stringify(result)}`)
         return null
@@ -63,7 +63,7 @@ async function createUser(_id, email, name) {
         joinDefaultChannels: false,
     }
 
-    let result = await client.post('/api/v1/users.create', client.adminHeader, postData)
+    let result = await client.post('/api/v1/users.create', client.getAdminHeader(), postData)
     if (!result.success || !result.user) {
         console.log(`chat-user-service | createUser: failed, result=${JSON.stringify(result)}`)
         return null
