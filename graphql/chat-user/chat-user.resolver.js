@@ -14,6 +14,16 @@ module.exports = {
 
             return chatUsers
         },
+
+        async owner(parent, args, context, info) {
+            console.log(`chat-user-resolver: parent=${JSON.stringify(parent)}`)
+        },
+    },
+
+    ChatMessage: {
+        async author(parent, args, context, info) {
+            return await getChatUserById(parent.author)
+        },
     },
 
     Query: {

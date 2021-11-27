@@ -55,7 +55,7 @@ class RocketChatClient {
             }
         )
 
-        console.log(`RocketChatClient | login: result=${JSON.stringify(result)}`)
+        // console.log(`RocketChatClient | login: result=${JSON.stringify(result)}`)
 
         return result
     }
@@ -92,7 +92,7 @@ class RocketChatClient {
                     httpHeader: header
                 })
 
-            console.log(`RocketChatClient | POST: method=${method} statusCode=${JSON.stringify(statusCode)} data=${JSON.stringify(data)}`)
+            console.log(`RocketChatClient | POST: method=${method} statusCode=${JSON.stringify(statusCode)}}`)
             return data
 
         } catch (err) {
@@ -102,14 +102,16 @@ class RocketChatClient {
     }
 
     async get(method, header, queryParams) {
+        console.log(`RocketChatClient | GET: method=${method} header=${JSON.stringify(header)} queryParams=${JSON.stringify(queryParams)}`)
 
         try {
+            const url = `${this._getHost()}${method}?${require('querystring').stringify(queryParams)}`
+            console.log(`RocketChatClient | GET: url=${url}`)
             const { statusCode, data, headers } = await this._curly.get(
-                `${this._getHost()}${method}?${require('querystring').stringify(queryParams)}`,
-                {
-                    httpHeader: header
-                })
-            console.log(`RocketChatClient | GET: method=${method} statusCode=${JSON.stringify(statusCode)} data=${JSON.stringify(data)}`)
+                url, {
+                httpHeader: header
+            })
+            console.log(`RocketChatClient | GET: method=${method} statusCode=${JSON.stringify(statusCode)}}`)
             return data
 
         } catch (err) {

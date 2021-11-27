@@ -7,7 +7,7 @@ module.exports = {
         async getMessagesByRoomIdSinceUpdated(parent, args, context, info) {
             console.log(`query | getMessagesByRoomIdSinceUpdated: args=${JSON.stringify(args)}`)
 
-            return await syncMessage(context.userId, args.roomId, args.updagedSince)
+            return await syncMessage(context.uid, args.roomId, args.updagedSince)
         },
     },
 
@@ -55,22 +55,29 @@ async function postMessage(senderUserId, roomId, text, /* attachment */) {
 }
 
 /* upadtedSince type: 2019-04-16T18:30:46.669Z */
-async function syncMessage(userId, roomId, updatedSince) {
+async function syncMessage(uid, roomId, updatedSince) {
+
+    console.log(`chat-message-resolver | syncMessage: uid=${uid}, roomId=${roomId}, updatedSince=${updatedSince}`)
+
+    let date = new Date()
+    date.setDate(date.getDate() - 1)
 
     let queryParams = {
         roomId: roomId,
-        updatedSince: updatedSince
+        lastUpdate: updatedSince ? updatedSince : date.toString()
     }
 
-    let userHeader = client.generateUserHeader(userId)
+    let userHeader = await client.generateUserHeader(uid)
 
     let result = await client.get('/api/v1/chat.syncMessages', userHeader, queryParams)
-    if (!result.success || !result.user) {
+    if (!result.success) {
         console.log(`chat-message-resolver | syncMessage: failed, result=${JSON.stringify(result)}`)
         return null
     }
 
-    return result.updated.map(rocketChatMessage => convertChatMessage(rocketChatMessage))
+    // console.log(`chat!!! ${JSON.stringify(result.result.updated)}`)
+
+    return result.result.updated.map(rocketChatMessage => convertChatMessage(rocketChatMessage))
 }
 
 function convertChatMessage(rocketChatMessage) {
