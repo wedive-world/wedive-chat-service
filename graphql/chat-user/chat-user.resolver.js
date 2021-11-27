@@ -4,6 +4,8 @@ const client = new RocketChatClient()
 module.exports = {
     ChatRoom: {
         async chatUsers(parent, args, context, info) {
+            console.log(`chat-user-resolver: parent=${JSON.stringify(parent)}`)
+
             let chatUsers = []
             for (userId of parent.userIds) {
                 let chatUser = await getChatUserById(userId)
@@ -68,6 +70,8 @@ async function createUser(_id, email, name) {
         console.log(`chat-user-service | createUser: failed, result=${JSON.stringify(result)}`)
         return null
     }
+
+    console.log(`createUser: result=${JSON.stringify(result)}`)
 
     return convertUser(result.user)
 }

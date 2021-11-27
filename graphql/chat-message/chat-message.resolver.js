@@ -5,7 +5,7 @@ module.exports = {
 
     Query: {
         async getMessagesByRoomIdSinceUpdated(parent, args, context, info) {
-            console.log(`query | getMessagesByRoomIdSinceUpdated: args=${args}`)
+            console.log(`query | getMessagesByRoomIdSinceUpdated: args=${JSON.stringify(args)}`)
 
             return await syncMessage(context.userId, args.roomId, args.updagedSince)
         },
@@ -16,26 +16,26 @@ module.exports = {
         async postMessageToRoom(parent, args, context, info) {
 
             console.log(`mutation | postMessageToRoom: args=${JSON.stringify(args)}`)
-            return await postMessage(args.roomId, args.input)
+            return await postMessage(context.uid, args.roomId, args.input)
         },
 
         async postMessageToUser(parent, args, context, info) {
 
             console.log(`mutation | postMessageToUser: args=${JSON.stringify(args)}`)
-            return await postMessage(`@${args.userId}`, args.input)
+            return await postMessage(context.uid, `@${args.userId}`, args.input)
         },
 
         async postMessageToChannel(parent, args, context, info) {
 
             console.log(`mutation | postMessageToChannel: args=${JSON.stringify(args)}`)
-            return await postMessage(`#${args.channelId}`, args.input)
+            return await postMessage(context.uid, `#${args.channelId}`, args.input)
         },
     },
 };
 
-async function postMessage(roomId, text, /* attachment */) {
+async function postMessage(senderUserId, roomId, text, /* attachment */) {
 
-    let userHeader = await client.generateUserHeader(userId)
+    let userHeader = await client.generateUserHeader(senderUserId)
 
     let result = await client.post(
         '/api/v1/chat.postMessage',

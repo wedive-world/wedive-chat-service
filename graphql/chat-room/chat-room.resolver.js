@@ -9,6 +9,12 @@ const roomTypeMap = {
 }
 
 module.exports = {
+    ChatMessage: {
+        async chatRoom(parent, args, context, info) {
+            console.log(`chat-room-resolver: parent=${JSON.stringify(parent)}`)
+            return await getChatRoom(context.uid, parent.chatRoom)
+        }
+    },
 
     Query: {
         async getJoinedRoomListByUserId(parent, args, context, info) {
@@ -43,6 +49,22 @@ async function getJoinedRoomList(_id) {
         .map(room => convertChatRoom(room))
 }
 
+async function getChatRoom(uid, roomId) {
+
+    let userHeader = await client.generateUserHeader(uid)
+    let queryParams = {
+        roomId: roomId
+    }
+
+    let result = await client.get('/api/v1/rooms.info', userHeader, queryParams)
+    if (!result.success) {
+        console.log(`chat-room-resolver | getChatRoom: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return convertChatRoom(result.room)
+}
+
 async function leaveRoom(userId, roomId) {
 
     let userHeader = await client.generateUserHeader(userId)
@@ -70,7 +92,7 @@ function convertChatRoom(rocketChatRoom) {
         canLeave: rocketChatRoom.cl,
         readOnly: rocketChatRoom.ro,
         userIds: rocketChatRoom.usernames,
-        ownerUserId: rocketChatRoom.u.username
+        ownerUserId: rocketChatRoom.u ? rocketChatRoom.u.username : ""
     }
 }
 

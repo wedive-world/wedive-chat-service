@@ -21,10 +21,10 @@ class RocketChatClient {
         if (!this._userIdCache.has(uid) || !this._userIdCache.has(uid)) {
             let result = await this.login(uid)
 
-            if (result.userId && result.authToken) {
+            if (result.data.userId && result.data.authToken) {
 
-                this._userIdCache.set(uid, result.userId)
-                this._userTokenCache.set(uid, result.authToken)
+                this._userIdCache.set(uid, result.data.userId)
+                this._userTokenCache.set(uid, result.data.authToken)
             }
         }
     }
@@ -64,8 +64,8 @@ class RocketChatClient {
         await this._checkAndUpdateUserCache(uid)
         return [
             "Content-Type:application/json",
-            `X-User-Id:${this._getUserId(uid)}`,
-            `X-Auth-Token:${this._getUserToken(uid)}`,
+            `X-User-Id:${await this._getUserId(uid)}`,
+            `X-Auth-Token:${await this._getUserToken(uid)}`,
         ]
     }
 
@@ -82,7 +82,7 @@ class RocketChatClient {
 
     async post(method, header, postData) {
 
-        console.log(`${this._getHost()}${method}`)
+        console.log(`RocketChatClient | POST: method=${method} header=${JSON.stringify(header)} postData=${JSON.stringify(postData)}`)
 
         try {
             const { statusCode, data, headers } = await this._curly.post(
@@ -109,7 +109,7 @@ class RocketChatClient {
                 {
                     httpHeader: header
                 })
-            console.log(`RocketChatClient | GET: method=${method} statusCode=${JSON.stringify(statusCode)} data=${data}`)
+            console.log(`RocketChatClient | GET: method=${method} statusCode=${JSON.stringify(statusCode)} data=${JSON.stringify(data)}`)
             return data
 
         } catch (err) {

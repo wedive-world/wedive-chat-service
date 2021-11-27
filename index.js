@@ -50,6 +50,7 @@ async function startServer() {
       // const token = req.headers.authorization.substr(7);
       // const user = users.find((user) => user.token === token);
 
+
       // if (!user) {
       //   throw new AuthenticationError("invalid token");
       // }
@@ -59,7 +60,7 @@ async function startServer() {
       // console.log(`context | countryCode: ${JSON.stringify(req.headers.authorization)}`)
 
       return {
-        countryCode: req.headers.countrycode,
+        uid: req.headers.uid,
         user: undefined
       }
     }
