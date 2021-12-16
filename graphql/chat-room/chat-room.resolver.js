@@ -19,7 +19,7 @@ module.exports = {
     Query: {
         async getJoinedRoomListByUserId(parent, args, context, info) {
 
-            console.log(`query | getJoinedRoomListByUserId: args=${args}`)
+            console.log(`query | getJoinedRoomListByUserId: args=${JSON.stringify(args)}`)
             return await getJoinedRoomList(args._id)
         },
 
