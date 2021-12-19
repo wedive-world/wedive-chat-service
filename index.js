@@ -69,6 +69,8 @@ async function startServer() {
 
   const app = express();
 
+  app.use('/healthcheck', require('express-healthcheck')())
+  
   server.applyMiddleware({ app });
 
   await new Promise(r => app.listen({ port: 4000 }, r));
