@@ -9,6 +9,8 @@ class RocketChatClient {
         ]
 
         this._curly = require('node-libcurl').curly
+        this._axios = require('axios').default
+
         var LRU = require("lru-cache")
 
         this._userIdCache = new LRU(100)
@@ -29,12 +31,12 @@ class RocketChatClient {
         }
     }
 
-    getAdminHeader() {
-        return [
-            "Content-Type:application/json",
-            `X-User-Id:${process.env.ADMIN_USER_ID}`,
-            `X-Auth-Token:${process.env.ADMIN_TOKEN}`,
-        ]
+    getAixosAdminHeader() {
+        return {
+            "Content-Type": "application/json",
+            "X-User-Id": `${process.env.ADMIN_USER_ID}`,
+            "X-Auth-Token": `${process.env.ADMIN_TOKEN}`
+        }
     }
 
     async _getUserToken(uid) {
@@ -82,17 +84,18 @@ class RocketChatClient {
 
     async post(method, header, postData) {
 
-        console.log(`RocketChatClient | POST: method=${method} header=${JSON.stringify(header)} postData=${JSON.stringify(postData)}`)
+        const url = `${this._getHost()}${method}`
+        console.log(`RocketChatClient | POST: url=${url} header=${JSON.stringify(header)} postData=${JSON.stringify(postData)}`)
 
         try {
-            const { statusCode, data, headers } = await this._curly.post(
-                `${this._getHost()}${method}`,
+            const { status, statusText, data } = await this._axios.post(
+                url,
+                postData,
                 {
-                    postFields: JSON.stringify(postData),
-                    httpHeader: header
+                    headers: header
                 })
 
-            console.log(`RocketChatClient | POST: method=${method} statusCode=${JSON.stringify(statusCode)}}`)
+            console.log(`RocketChatClient | POST: status=${status} statusText=${statusText} data=${JSON.stringify(data)}`)
             return data
 
         } catch (err) {
@@ -107,16 +110,17 @@ class RocketChatClient {
         try {
             const url = `${this._getHost()}${method}?${require('querystring').stringify(queryParams)}`
             console.log(`RocketChatClient | GET: url=${url}`)
-            const { statusCode, data, headers } = await this._curly.get(
-                url, {
-                httpHeader: header
-            })
-            console.log(`RocketChatClient | GET: method=${method} statusCode=${JSON.stringify(statusCode)}}`)
+
+            const { status, statusText, data } = await this._axios.get(
+                url,
+                {
+                    headers: header
+                })
+            console.log(`RocketChatClient | GET: status=${status}, statusText=${statusText} data=${JSON.stringify(data)}`)
             return data
 
         } catch (err) {
             console.log(`RocketChatClient | GET: method=${method} err=${JSON.stringify(err)}`)
-
             return err
         }
     }

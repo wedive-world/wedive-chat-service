@@ -30,8 +30,7 @@ module.exports = {
         async getChatUserById(parent, args, context, info) {
 
             console.log(`query | getChatUserById: args=${args}`)
-            let user = await getChatUserById(args._id)
-            return user
+            return await getChatUserById(args._id)
         },
 
     },
@@ -54,7 +53,7 @@ async function getChatUserById(_id) {
         username: _id
     }
 
-    let result = await client.get('/api/v1/users.info', client.getAdminHeader(), queryParams)
+    let result = await client.get('/api/v1/users.info', client.getAixosAdminHeader(), queryParams)
     if (!result.success || !result.user) {
         console.log(`chat-user-service | getChatUserById: failed, result=${JSON.stringify(result)}`)
         return null
@@ -75,7 +74,7 @@ async function createUser(_id, email, name) {
         joinDefaultChannels: false,
     }
 
-    let result = await client.post('/api/v1/users.create', client.getAdminHeader(), postData)
+    let result = await client.post('/api/v1/users.create', client.getAixosAdminHeader(), postData)
     if (!result.success || !result.user) {
         console.log(`chat-user-service | createUser: failed, result=${JSON.stringify(result)}`)
         return null
@@ -87,6 +86,8 @@ async function createUser(_id, email, name) {
 }
 
 function convertUser(rocketChatUser) {
+    // console.log(`convertUser: rocketChatUser=${JSON.stringify(rocketChatUser)}`)
+
     return {
         _id: rocketChatUser.username,
         name: rocketChatUser.name,
