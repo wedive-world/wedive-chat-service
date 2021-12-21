@@ -54,7 +54,7 @@ async function startServer() {
       // if (!req.headers.authorization) {
       //   throw new AuthenticationError("mssing token");
       // }
-      
+
       let uid = null
 
       if (req.headers.idtoken) {
@@ -69,7 +69,7 @@ async function startServer() {
 
       return {
         uid: uid ? uid : 'a4H7anucnXWGBV4QR7FEf7iZYXv2',
-        idToken: idToken,
+        idToken: req.headers.idtoken,
         user: undefined
       }
     }
