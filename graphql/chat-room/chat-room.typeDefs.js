@@ -3,7 +3,7 @@ const { gql } = require('apollo-server')
 module.exports = gql`
 
 type Query {
-    getJoinedRoomListByUserId: [ChatRoom]
+    getJoinedRoomList: [ChatRoom]
 }
 
 type Mutation {
