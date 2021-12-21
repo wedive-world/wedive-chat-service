@@ -6,6 +6,7 @@ const {
 } = require('apollo-server-express');
 
 const { initializeApp } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
 
 const schema = require('./graphql/schema')
 
@@ -42,22 +43,29 @@ function applyEnvironment() {
 
 async function startServer() {
 
-  initializeApp();
+  const firebaseApp = initializeApp()
+  const firebaseAuth = getAuth(firebaseApp)
 
   const server = new ApolloServer({
     schema: schema,
     playground: true,
     introspection: true,
-    context: ({ req }) => {
-      console.log(`req.headers=${JSON.stringify(req.headers)}`)
-
+    context: async ({ req }) => {
       // if (!req.headers.authorization) {
       //   throw new AuthenticationError("mssing token");
       // }
+      
+      let uid = null
 
-      let decodedToken = admin.auth().verifyIdToken(req.headers.idtoken)
-      const uid = decodedToken.uid;
-      console.log(`uid=${uid}`)
+      if (req.headers.idtoken) {
+        try {
+          let decodedToken = await firebaseAuth.verifyIdToken(req.headers.idtoken)
+          uid = decodedToken.uid;
+          console.log(`uid=${uid}`)
+        } catch (err) {
+          console.log(`err!! + ${err}`)
+        }
+      }
 
       return {
         uid: uid ? uid : 'a4H7anucnXWGBV4QR7FEf7iZYXv2',
