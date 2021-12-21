@@ -55,8 +55,7 @@ async function startServer() {
       //   throw new AuthenticationError("mssing token");
       // }
 
-      let decodedToken = await admin.auth()
-        .verifyIdToken(req.headers.idtoken)
+      let decodedToken = admin.auth().verifyIdToken(req.headers.idtoken)
       const uid = decodedToken.uid;
       console.log(`uid=${uid}`)
 
