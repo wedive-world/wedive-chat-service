@@ -18,9 +18,8 @@ module.exports = {
 
     Query: {
         async getJoinedRoomListByUserId(parent, args, context, info) {
-
-            console.log(`query | getJoinedRoomListByUserId: args=${JSON.stringify(args)}`)
-            return await getJoinedRoomList(args._id)
+            console.log(`query | getJoinedRoomListByUserId: context=${JSON.stringify(context)}`)
+            return await getJoinedRoomList(context.uid)
         },
 
     },
@@ -28,9 +27,9 @@ module.exports = {
     Mutation: {
 
         async leaveRoom(parent, args, context, info) {
-
             console.log(`mutation | createChatUser: args=${JSON.stringify(args)}`)
-            return await leaveRoom(args.userId, args.roomId)
+            console.log(`mutation | createChatUser: context=${JSON.stringify(context)}`)
+            return await leaveRoom(context.uid, args.roomId)
         }
     },
 };

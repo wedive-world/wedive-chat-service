@@ -29,8 +29,8 @@ module.exports = {
     Query: {
         async getChatUserById(parent, args, context, info) {
 
-            console.log(`query | getChatUserById: args=${args}`)
-            return await getChatUserById(args._id)
+            console.log(`query | getChatUserById: context=${JSON.stringify(context)}`)
+            return await getChatUserById(context.uid)
         },
 
     },

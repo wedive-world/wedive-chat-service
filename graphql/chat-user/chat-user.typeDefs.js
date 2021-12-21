@@ -3,7 +3,7 @@ const { gql } = require('apollo-server')
 module.exports = gql`
 
 type Query {
-    getChatUserById(_id: String!): ChatUser @cacheControl(maxAge: 30)
+    getChatUserById: ChatUser @cacheControl(maxAge: 30)
 }
 
 type Mutation {
