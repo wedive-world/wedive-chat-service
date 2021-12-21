@@ -5,7 +5,11 @@ const {
   ForbiddenError,
 } = require('apollo-server-express');
 
+const { initializeApp } = require('firebase-admin/app');
+
 const schema = require('./graphql/schema')
+
+require('dotenv').config({ path: process.env.PWD + '/wedive-secret/firebase-admin/firebase-admin.env' })
 
 function applyEnvironment() {
 
@@ -38,29 +42,26 @@ function applyEnvironment() {
 
 async function startServer() {
 
+  initializeApp();
+
   const server = new ApolloServer({
     schema: schema,
     playground: true,
     introspection: true,
     context: ({ req }) => {
+      console.log(`req.headers=${JSON.stringify(req.headers)}`)
+
       // if (!req.headers.authorization) {
       //   throw new AuthenticationError("mssing token");
       // }
 
-      // const token = req.headers.authorization.substr(7);
-      // const user = users.find((user) => user.token === token);
-
-
-      // if (!user) {
-      //   throw new AuthenticationError("invalid token");
-      // }
-
-      // console.log(`context | headers: ${JSON.stringify(req.headers)}`)
-      // console.log(`context | countryCode: ${JSON.stringify(req.headers.countrycode)}`)
-      // console.log(`context | countryCode: ${JSON.stringify(req.headers.authorization)}`)
+      let decodedToken = await admin.auth()
+        .verifyIdToken(req.headers.idtoken)
+      const uid = decodedToken.uid;
 
       return {
-        uid: req.headers.uid,
+        uid: uid ? uid : 'a4H7anucnXWGBV4QR7FEf7iZYXv2',
+        idToken: idToken,
         user: undefined
       }
     }
@@ -70,7 +71,7 @@ async function startServer() {
   const app = express();
 
   app.use('/healthcheck', require('express-healthcheck')())
-  
+
   server.applyMiddleware({ app });
 
   await new Promise(r => app.listen({ port: 4000 }, r));
