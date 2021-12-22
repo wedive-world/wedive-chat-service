@@ -1,6 +1,8 @@
 const RocketChatClient = require("../client/rocketchat-client")
 const client = new RocketChatClient()
 
+const { PubSub } = require("apollo-server");
+
 const roomTypeMap = {
     c: 'channel',
     d: 'direct',
@@ -27,8 +29,8 @@ module.exports = {
     Mutation: {
 
         async leaveRoom(parent, args, context, info) {
-            console.log(`mutation | createChatUser: args=${JSON.stringify(args)}`)
-            console.log(`mutation | createChatUser: context=${JSON.stringify(context)}`)
+            console.log(`mutation | leaveRoom: args=${JSON.stringify(args)}`)
+            console.log(`mutation | leaveRoom: context=${JSON.stringify(context)}`)
             return await leaveRoom(context.uid, args.roomId)
         }
     },

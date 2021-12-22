@@ -12,6 +12,10 @@ type Mutation {
     postMessageToChannel(channel: String!, input: String!): ChatMessage
 }
 
+type Subscription {
+    onMessageAdded(roomId: String!): ChatMessage
+}
+
 # interface IUser {
 #     _id: String;
 #     createdAt: Date;
@@ -47,7 +51,17 @@ type Mutation {
 type ChatMessage {
     _id: String
     text: String
+    author: ChatUser
     attachments: [Attachment]
+    createdAt: Date
+    updatedAt: Date
+}
+
+subscription ChatMessage {
+    _id: String
+    text: String
+    author: ChatUser
+    hasAttachments: boolean
     createdAt: Date
     updatedAt: Date
 }

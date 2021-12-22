@@ -1,9 +1,15 @@
 const express = require('express');
+
 const {
   ApolloServer,
   AuthenticationError,
   ForbiddenError,
 } = require('apollo-server-express');
+
+const { execute, subscribe } = require('graphql')
+
+const { createServer } = require('http')
+const { SubscriptionServer } = require('subscriptions-transport-ws')
 
 const { initializeApp } = require('firebase-admin/app');
 const { getAuth } = require('firebase-admin/auth');
@@ -46,10 +52,21 @@ async function startServer() {
   const firebaseApp = initializeApp()
   const firebaseAuth = getAuth(firebaseApp)
 
+  const app = express();
+  app.use('/healthcheck', require('express-healthcheck')())
+
+  const httpServer = createServer(app);
+
+  const subscriptionServer = SubscriptionServer.create(
+    { schema, execute, subscribe },
+    { server: httpServer, path: '/graphql' }
+  );
+
   const server = new ApolloServer({
     schema: schema,
     playground: true,
     introspection: true,
+
     context: async ({ req }) => {
       // if (!req.headers.authorization) {
       //   throw new AuthenticationError("mssing token");
@@ -72,17 +89,25 @@ async function startServer() {
         idToken: req.headers.idtoken,
         user: undefined
       }
-    }
+    },
+
+    plugins: [
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              subscriptionServer.close();
+            }
+          }
+        }
+      }
+    ],
   });
+
   await server.start();
-
-  const app = express();
-
-  app.use('/healthcheck', require('express-healthcheck')())
-
   server.applyMiddleware({ app });
 
-  await new Promise(r => app.listen({ port: 4000 }, r));
+  await new Promise(r => httpServer.listen({ port: 4000 }, r));
   console.log(`🚀 ${process.env.NODE_ENV} Server ready at http://localhost:4000${server.graphqlPath}`);
 }
 

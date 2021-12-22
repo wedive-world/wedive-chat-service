@@ -1,6 +1,9 @@
 const RocketChatClient = require("../client/rocketchat-client")
 const client = new RocketChatClient()
 
+const { PubSub } = require('graphql-subscriptions')
+let pubsub = new PubSub();
+
 module.exports = {
 
     Query: {
@@ -30,6 +33,26 @@ module.exports = {
             console.log(`mutation | postMessageToChannel: args=${JSON.stringify(args)}`)
             return await postMessage(context.uid, `#${args.channelId}`, args.input)
         },
+    },
+
+    Subscription: {
+        async onMessageAdded(parent, args, context, info) {
+
+
+            console.log(`subscription | onMessageAdded: args=${JSON.stringify(args)}`)
+            console.log(`subscription | onMessageAdded: context=${JSON.stringify(context)}`)
+
+            //https://www.apollographql.com/docs/apollo-server/data/subscriptions/#listening-for-events
+            
+            // pubsub.asyncIterator(['POST_CREATED']); //sub
+
+            // pubsub.publish('POST_CREATED', { //pub
+            //     postCreated: {
+            //       author: 'Ali Baba',
+            //       comment: 'Open sesame'
+            //     }
+            //   });
+        }
     },
 };
 
