@@ -34,9 +34,9 @@ module.exports = {
     },
 };
 
-async function getJoinedRoomList(_id) {
+async function getJoinedRoomList(uid) {
 
-    let userHeader = await client.generateUserHeader(_id)
+    let userHeader = await client.generateUserHeader(uid)
 
     let result = await client.get('/api/v1/rooms.get', userHeader)
     if (!result.success) {

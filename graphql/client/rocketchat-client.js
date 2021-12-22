@@ -4,9 +4,9 @@ class RocketChatClient {
             RocketChatClient.instance = this
         }
 
-        this._emptyHeader = [
-            "Content-Type:application/json",
-        ]
+        this._emptyHeader = {
+            "Content-Type": "application/json",
+        }
 
         this._curly = require('node-libcurl').curly
         this._axios = require('axios').default
@@ -31,14 +31,6 @@ class RocketChatClient {
         }
     }
 
-    getAixosAdminHeader() {
-        return {
-            "Content-Type": "application/json",
-            "X-User-Id": `${process.env.ADMIN_USER_ID}`,
-            "X-Auth-Token": `${process.env.ADMIN_TOKEN}`
-        }
-    }
-
     async _getUserToken(uid) {
         return this._userTokenCache.get(uid)
     }
@@ -57,18 +49,26 @@ class RocketChatClient {
             }
         )
 
-        // console.log(`RocketChatClient | login: result=${JSON.stringify(result)}`)
+        console.log(`RocketChatClient | login: result=${JSON.stringify(result)}`)
 
         return result
     }
 
+    getAixosAdminHeader() {
+        return {
+            "Content-Type": "application/json",
+            "X-User-Id": `${process.env.ADMIN_USER_ID}`,
+            "X-Auth-Token": `${process.env.ADMIN_TOKEN}`
+        }
+    }
+
     async generateUserHeader(uid) {
         await this._checkAndUpdateUserCache(uid)
-        return [
-            "Content-Type:application/json",
-            `X-User-Id:${await this._getUserId(uid)}`,
-            `X-Auth-Token:${await this._getUserToken(uid)}`,
-        ]
+        return {
+            "Content-Type": "application/json",
+            "X-User-Id": `${await this._getUserId(uid)}`,
+            "X-Auth-Token": `${await this._getUserToken(uid)}`,
+        }
     }
 
     generatePassword(uid) {
