@@ -68,20 +68,19 @@ async function startServer() {
     introspection: true,
 
     context: async ({ req }) => {
-      // if (!req.headers.authorization) {
-      //   throw new AuthenticationError("mssing token");
-      // }
+      if (!req.headers.idtoken) {
+        throw new AuthenticationError("mssing idtoken");
+      }
 
       let uid = null
 
-      if (req.headers.idtoken) {
-        try {
-          let decodedToken = await firebaseAuth.verifyIdToken(req.headers.idtoken)
-          uid = decodedToken.uid;
-          console.log(`uid=${uid}`)
-        } catch (err) {
-          console.log(`err!! + ${err}`)
-        }
+      try {
+        let decodedToken = await firebaseAuth.verifyIdToken(req.headers.idtoken)
+        uid = decodedToken.uid;
+        console.log(`uid=${uid}`)
+
+      } catch (err) {
+        throw new AuthenticationError(err);
       }
 
       return {
