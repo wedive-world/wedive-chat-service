@@ -8,6 +8,11 @@ module.exports = gql`
     PRIVATE
   }
 
+  type Response {
+    success: Boolean
+    reason: String
+  }
+
   directive @cacheControl(
     maxAge: Int
     scope: CacheControlScope

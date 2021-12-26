@@ -8,6 +8,7 @@ type Query {
 
 type Mutation {
     createChatUser(_id: String!, email: String!, name: String!): ChatUser!
+    updateChatUser(name: String!, avatarUrl: String): Response!
 }
 
 # interface IUser {

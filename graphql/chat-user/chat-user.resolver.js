@@ -42,7 +42,14 @@ module.exports = {
             console.log(`mutation | createChatUser: args=${JSON.stringify(args)}`)
             let user = await createUser(args._id, args.email, args.name)
             return user
-        }
+        },
+
+        async updateChatUser(parent, args, context, info) {
+
+            console.log(`mutation | updateChatUser: args=${JSON.stringify(args)}`)
+            let user = await updateUser(context.uid, args.name, args.avatarUrl)
+            return user
+        },
     },
 };
 
@@ -83,6 +90,38 @@ async function createUser(_id, email, name) {
     console.log(`createUser: result=${JSON.stringify(result)}`)
 
     return convertUser(result.user)
+}
+
+async function updateUser(uid, name, avatarUrl) {
+
+    let avatarData = {
+        userId: uid,
+        avatarUrl: avatarUrl
+    }
+
+    let avatarResult = await client.post('/api/v1/users.setAvatar', client._getUserToken(uid), avatarData)
+    if (!avatarResult.success) {
+        console.log(`chat-user-service | updateUser: failed, avatarResult=${JSON.stringify(avatarResult)}`)
+    }
+
+    let userData = {
+        userId: uid,
+        data: {
+            name: name
+        }
+    }
+
+    let userResult = await client.post('/api/v1/users.update', client._getUserToken(uid), userData)
+    if (!userResult.success) {
+        console.log(`chat-user-service | updateUser: failed, userResult=${JSON.stringify(userResult)}`)
+    }
+
+    console.log(`updateUser: avatarResult=${JSON.stringify(avatarResult)}`)
+    console.log(`updateUser: userResult=${JSON.stringify(userResult)}`)
+
+    return {
+        success: avatarResult.success && userResult.success
+    }
 }
 
 function convertUser(rocketChatUser) {
