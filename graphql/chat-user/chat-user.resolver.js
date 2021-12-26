@@ -50,9 +50,15 @@ module.exports = {
             let user = await updateUser(context.uid, args.name, args.avatarUrl)
             return user
         },
+
+        async updateChatUserV2(parent, args, context, info) {
+
+            console.log(`mutation | updateChatUser: args=${JSON.stringify(args)}`)
+            let user = await updateUserV2(args.input)
+            return user
+        },
     },
 };
-
 
 async function getChatUserById(_id) {
 
@@ -108,6 +114,41 @@ async function updateUser(uid, name, avatarUrl) {
         userId: uid,
         data: {
             name: name
+        }
+    }
+
+    let userResult = await client.post('/api/v1/users.update', client._getUserToken(uid), userData)
+    if (!userResult.success) {
+        console.log(`chat-user-service | updateUser: failed, userResult=${JSON.stringify(userResult)}`)
+    }
+
+    console.log(`updateUser: avatarResult=${JSON.stringify(avatarResult)}`)
+    console.log(`updateUser: userResult=${JSON.stringify(userResult)}`)
+
+    return {
+        success: avatarResult.success && userResult.success
+    }
+}
+
+async function updateUserV2({ uid, name, avatarUrl, fcmToken }) {
+
+    let avatarData = {
+        userId: uid,
+        avatarUrl: avatarUrl
+    }
+
+    let avatarResult = await client.post('/api/v1/users.setAvatar', client._getUserToken(uid), avatarData)
+    if (!avatarResult.success) {
+        console.log(`chat-user-service | updateUser: failed, avatarResult=${JSON.stringify(avatarResult)}`)
+    }
+
+    let userData = {
+        userId: uid,
+        data: {
+            name: name,
+            customFields: {
+                fcmToken: fcmToken
+            }
         }
     }
 

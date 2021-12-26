@@ -9,6 +9,9 @@ type Query {
 type Mutation {
     createChatUser(_id: String!, email: String!, name: String!): ChatUser!
     updateChatUser(name: String!, avatarUrl: String): Response!
+
+    createChatUserV2(_id: String!, email: String!, name: String!): ChatUser!
+    updateChatUserV2(input: ChatUserInput): Response!
 }
 
 # interface IUser {
@@ -50,6 +53,17 @@ type ChatUser {
     email: String
     avatarOrigin: String
     utcOffset: Int
+
+    createdAt: Date
+    updatedAt: Date
+}
+
+input ChatUserInput {
+    uid: String
+    name: String
+    email: String
+    avatarOrigin: String
+    fcmToken: String
 
     createdAt: Date
     updatedAt: Date
