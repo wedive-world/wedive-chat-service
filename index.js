@@ -75,12 +75,14 @@ async function startServer() {
       let uid = null
 
       if (req.headers.idtoken) {
+        console.log(`index | context: req.headers.idtoken=${req.headers.idtoken}`)
         try {
           let decodedToken = await firebaseAuth.verifyIdToken(req.headers.idtoken)
           uid = decodedToken.uid;
-          console.log(`uid=${uid}`)
+          console.log(`index | context: decode success, uid=${uid}`)
 
         } catch (err) {
+          console.log(`err!! + ${err}`)
           throw new AuthenticationError(err);
         }
       }
