@@ -149,7 +149,7 @@ async function updateFcmToken(uid, fcmToken) {
     console.log(`updateFcmToken: userResult=${JSON.stringify(result)}`)
 
     return {
-        success: avatarResult.success && result.success
+        success: result.success
     }
 }
 
