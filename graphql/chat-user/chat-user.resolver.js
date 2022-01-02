@@ -141,16 +141,15 @@ async function updateFcmToken(uid, fcmToken) {
         }
     }
 
-    let userResult = await client.post('/api/v1/users.update', client._getUserToken(uid), userData)
-    if (!userResult.success) {
-        console.log(`chat-user-service | updateFcmToken: failed, userResult=${JSON.stringify(userResult)}`)
+    let result = await client.post('/api/v1/users.update', client._getUserToken(uid), userData)
+    if (!result.success) {
+        console.log(`chat-user-service | updateFcmToken: failed, userResult=${JSON.stringify(result)}`)
     }
 
-    console.log(`updateFcmToken: avatarResult=${JSON.stringify(avatarResult)}`)
-    console.log(`updateFcmToken: userResult=${JSON.stringify(userResult)}`)
+    console.log(`updateFcmToken: userResult=${JSON.stringify(result)}`)
 
     return {
-        success: avatarResult.success && userResult.success
+        success: avatarResult.success && result.success
     }
 }
 
