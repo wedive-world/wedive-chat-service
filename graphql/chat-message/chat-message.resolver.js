@@ -6,6 +6,9 @@ const rocketChatClient = new RocketChatClient()
 const FirebaseClient = require('../client/fireabse-client')
 const firebaseClient = new FirebaseClient()
 
+const ApiClient = require('../client/api-client')
+const apiClient = new ApiClient()
+
 module.exports = {
 
     ChatRoom: {
@@ -115,20 +118,11 @@ async function postMessage(senderUserId, roomId, text, /* attachment */) {
     )
     console.log(`chat-message-resolver | roomInfo=${JSON.stringify(roomInfo.room.usernames)}`)
 
-    for (username of roomInfo.room.usernames) {
-        let userInfo = await rocketChatClient.get(
-            '/api/v1/users.info',
-            userHeader,
-            {
-                username: username
-            }
-        )
+    let chatMessage = convertChatMessage(result.message)
+    let tokenList = await apiClient.getFcmTokenList(roomInfo.room.usernames)
+    await firebaseClient.sendMulticast(tokenList, 'onNewChatMessage', chatMessage)
 
-        console.log(`chat-message-resolver | userInfo=${JSON.stringify(userInfo)}`)
-    }
-    // firebaseClient.sendMulticast()
-
-    return convertChatMessage(result.message)
+    return chatMessage
 }
 
 /* upadtedSince type: 2019-04-16T18:30:46.669Z */

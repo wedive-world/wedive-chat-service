@@ -27,6 +27,7 @@
     "express": "^4.17.1",
     "express-healthcheck": "^0.1.0",
     "firebase-admin": "^10.0.1",
+    "graphql-request": "^3.7.0",
     "graphql-subscriptions": "^2.0.0",
     "http": "^0.0.1-security",
     "lru-cache": "^6.0.0",

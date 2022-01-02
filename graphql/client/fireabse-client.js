@@ -10,13 +10,17 @@ class FirebaseClient {
     }
 
     async sendMulticast(tokenList, event, data) {
-        getMessaging(getApp()).sendMulticast({
+        console.log(`FirebaseClient | sendMulticast: tokenList=${JSON.stringify(tokenList)}, event=${event}, data=${JSON.stringify(data)}`)
+
+        let result = getMessaging(getApp()).sendMulticast({
             data: {
                 event: event,
-                messageData: data
+                ...data
             },
             tokens: tokenList
         })
+
+        console.log(`FirebaseClient | sendMulticast: result=${JSON.stringify(result)}`)
     }
 }
 
