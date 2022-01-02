@@ -1,8 +1,10 @@
-const RocketChatClient = require("../client/rocketchat-client")
-
 const { PubSub } = require('graphql-subscriptions')
 
-const client = new RocketChatClient()
+const RocketChatClient = require("../client/rocketchat-client")
+const rocketChatClient = new RocketChatClient()
+
+const FirebaseClient = require('../client/fireabse-client')
+const firebaseClient = new FirebaseClient()
 
 module.exports = {
 
@@ -31,7 +33,7 @@ module.exports = {
             if (!messages) {
                 return null
             }
-            
+
             return messages.slice(args.skip, args.skip + args.limit)
         },
     },
@@ -68,7 +70,7 @@ module.exports = {
 
                 const pubsub = new PubSub();
 
-                await client.subscribeChatRoomMessage(
+                await rocketChatClient.subscribeChatRoomMessage(
                     context.uid,
                     roomId,
                     context.sessionId,
@@ -88,9 +90,9 @@ module.exports = {
 
 async function postMessage(senderUserId, roomId, text, /* attachment */) {
 
-    let userHeader = await client.generateUserHeader(senderUserId)
+    let userHeader = await rocketChatClient.generateUserHeader(senderUserId)
 
-    let result = await client.post(
+    let result = await rocketChatClient.post(
         '/api/v1/chat.postMessage',
         userHeader,
         {
@@ -103,6 +105,28 @@ async function postMessage(senderUserId, roomId, text, /* attachment */) {
         console.log(`chat-message-resolver | postMessage: failed, result=${JSON.stringify(result)}`)
         return null
     }
+
+    let roomInfo = await rocketChatClient.get(
+        '/api/v1/rooms.info',
+        userHeader,
+        {
+            roomId: roomId
+        }
+    )
+    console.log(`chat-message-resolver | roomInfo=${JSON.stringify(roomInfo.room.usernames)}`)
+
+    for (username of roomInfo.room.usernames) {
+        let userInfo = await rocketChatClient.get(
+            '/api/v1/users.info',
+            userHeader,
+            {
+                username: username
+            }
+        )
+
+        console.log(`chat-message-resolver | userInfo=${JSON.stringify(userInfo)}`)
+    }
+    // firebaseClient.sendMulticast()
 
     return convertChatMessage(result.message)
 }
@@ -120,9 +144,9 @@ async function syncMessage(uid, roomId, updatedSince) {
         lastUpdate: updatedSince ? updatedSince : date.toString()
     }
 
-    let userHeader = await client.generateUserHeader(uid)
+    let userHeader = await rocketChatClient.generateUserHeader(uid)
 
-    let result = await client.get('/api/v1/chat.syncMessages', userHeader, queryParams)
+    let result = await rocketChatClient.get('/api/v1/chat.syncMessages', userHeader, queryParams)
     if (!result.success) {
         console.log(`chat-message-resolver | syncMessage: failed, result=${JSON.stringify(result)}`)
         return null

@@ -11,7 +11,7 @@ type Mutation {
     updateChatUser(name: String!, avatarUrl: String): Response!
 
     createChatUserV2(_id: String!, email: String!, name: String!): ChatUser!
-    updateChatUserV2(input: ChatUserInput): Response!
+    updateFcmToken(_id: String!, fcmToken: String!): Response!
 }
 
 # interface IUser {
