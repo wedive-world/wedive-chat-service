@@ -14,14 +14,18 @@ const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { initializeApp } = require('firebase-admin/app');
 const { getAuth } = require('firebase-admin/auth');
 
-const firebaseApp = initializeApp()
-const firebaseAuth = getAuth(firebaseApp)
 
 const schema = require('./graphql/schema');
 const { randomUUID } = require('crypto');
 const RocketChatClient = require('./graphql/client/rocketchat-client')
 
 require('dotenv').config({ path: process.env.PWD + '/wedive-secret/firebase-admin/firebase-admin.env' })
+
+const firebaseApp = initializeApp()
+const firebaseAuth = getAuth(firebaseApp)
+
+applyEnvironment();
+startServer();
 
 function applyEnvironment() {
 
@@ -128,9 +132,6 @@ async function startServer() {
     () => console.log(`🚀 ${process.env.NODE_ENV} Server ready at http://localhost:4000${server.graphqlPath}`)
   )
 }
-
-applyEnvironment();
-startServer();
 
 async function validateIdToken(header) {
   if (!header) {
