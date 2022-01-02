@@ -32,7 +32,7 @@ module.exports = {
                 return null
             }
             
-            return messages.slice(args.offset, args.offset + args.skip)
+            return messages.slice(args.skip, args.skip + args.limit)
         },
     },
 

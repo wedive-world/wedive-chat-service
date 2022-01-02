@@ -4,7 +4,7 @@ module.exports = gql`
 
 type Query {
     getMessagesByRoomIdSinceUpdated(roomId: String!, updatedSince: Date): [ChatMessage]
-    getMessagesByRoomId(roomId: String!, offset: Int = 0, skip: Int = 100): [ChatMessage]
+    getMessagesByRoomId(roomId: String!, skip: Int = 0, limit: Int = 100): [ChatMessage]
 }
 
 type Mutation {
