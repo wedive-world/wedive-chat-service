@@ -1,16 +1,38 @@
 const RocketChatClient = require("../client/rocketchat-client")
-const client = new RocketChatClient()
 
 const { PubSub } = require('graphql-subscriptions')
-let pubsub = new PubSub();
+
+const client = new RocketChatClient()
 
 module.exports = {
+
+    ChatRoom: {
+        async lastChatMessage(parent, args, context, info) {
+            console.log(`lastChatMessage: parent=${JSON.stringify(parent)}`)
+            return convertChatMessage(parent.lastChatMessage)
+        },
+    },
 
     Query: {
         async getMessagesByRoomIdSinceUpdated(parent, args, context, info) {
             console.log(`query | getMessagesByRoomIdSinceUpdated: args=${JSON.stringify(args)}`)
 
             return await syncMessage(context.uid, args.roomId, args.updagedSince)
+        },
+
+        async getMessagesByRoomId(parent, args, context, info) {
+
+            var date = new Date();
+            date.setDate(date.getDate() - 30);
+
+            console.log(`query | getMessagesByRoomId: args=${JSON.stringify(args)}, context=${JSON.stringify(context)}, date=${date.toISOString()}`)
+
+            let messages = await syncMessage(context.uid, args.roomId, date.toISOString())
+            if (!messages) {
+                return null
+            }
+            
+            return messages.slice(args.offset, args.offset + args.skip)
         },
     },
 
@@ -36,23 +58,31 @@ module.exports = {
     },
 
     Subscription: {
-        async onMessageAdded(parent, args, context, info) {
+        subscribeRoomMessage: {
+            subscribe: async (parent, args, context, info) => {
 
+                console.log(`subscription | subscribeRoomMessage: args=${JSON.stringify(args)}`)
+                console.log(`subscription | subscribeRoomMessage: context=${JSON.stringify(context)}`)
 
-            console.log(`subscription | onMessageAdded: args=${JSON.stringify(args)}`)
-            console.log(`subscription | onMessageAdded: context=${JSON.stringify(context)}`)
+                let roomId = args.roomId
 
-            //https://www.apollographql.com/docs/apollo-server/data/subscriptions/#listening-for-events
-            
-            // pubsub.asyncIterator(['POST_CREATED']); //sub
+                const pubsub = new PubSub();
 
-            // pubsub.publish('POST_CREATED', { //pub
-            //     postCreated: {
-            //       author: 'Ali Baba',
-            //       comment: 'Open sesame'
-            //     }
-            //   });
-        }
+                await client.subscribeChatRoomMessage(
+                    context.uid,
+                    roomId,
+                    context.sessionId,
+                    (messages) => {
+                        let chatMessages = messages.map(message => convertChatMessage(message))
+                        pubsub.publish(roomId, {
+                            subscribeRoomMessage: chatMessages
+                        })
+                    }
+                )
+
+                return pubsub.asyncIterator([roomId])
+            }
+        },
     },
 };
 

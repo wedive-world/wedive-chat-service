@@ -93,7 +93,8 @@ function convertChatRoom(rocketChatRoom) {
         canLeave: rocketChatRoom.cl,
         readOnly: rocketChatRoom.ro,
         userIds: rocketChatRoom.usernames,
-        ownerUserId: rocketChatRoom.u ? rocketChatRoom.u.username : ""
+        ownerUserId: rocketChatRoom.u ? rocketChatRoom.u.username : "",
+        lastChatMessage: rocketChatRoom.lastMessage
     }
 }
 

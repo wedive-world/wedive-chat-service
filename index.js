@@ -14,7 +14,12 @@ const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { initializeApp } = require('firebase-admin/app');
 const { getAuth } = require('firebase-admin/auth');
 
-const schema = require('./graphql/schema')
+const firebaseApp = initializeApp()
+const firebaseAuth = getAuth(firebaseApp)
+
+const schema = require('./graphql/schema');
+const { randomUUID } = require('crypto');
+const RocketChatClient = require('./graphql/client/rocketchat-client')
 
 require('dotenv').config({ path: process.env.PWD + '/wedive-secret/firebase-admin/firebase-admin.env' })
 
@@ -49,16 +54,38 @@ function applyEnvironment() {
 
 async function startServer() {
 
-  const firebaseApp = initializeApp()
-  const firebaseAuth = getAuth(firebaseApp)
-
   const app = express();
   app.use('/healthcheck', require('express-healthcheck')())
 
   const httpServer = createServer(app);
 
   const subscriptionServer = SubscriptionServer.create(
-    { schema, execute, subscribe },
+    {
+      schema, execute, subscribe,
+      async onConnect(connectionParams, webSocket, context) {
+        // console.log(`Connected! connectionParams=${JSON.stringify(connectionParams)}`)
+        let uid = await validateIdToken(connectionParams);
+        let sessionId = randomUUID()
+
+        webSocket.sessionId = sessionId;
+
+        return {
+          uid: uid ? uid : 'teQTnjYiQrRj8jTcLuHWFOLAta82',
+          idToken: connectionParams.idtoken,
+          sessionId: sessionId
+        }
+      },
+      onOperationComplete(webSocket) {
+        console.log(`onOperationComplete! webSocket=${JSON.stringify(webSocket.sessionId)}`)
+        let rocketChatClient = new RocketChatClient()
+        rocketChatClient.expireSession(webSocket.sessionId)
+      },
+      onDisconnect(webSocket, context) {
+        console.log(`Disconnected! webSocket=${JSON.stringify(webSocket)}`)
+        let rocketChatClient = new RocketChatClient()
+        rocketChatClient.expireSession(webSocket.sessionId)
+      },
+    },
     { server: httpServer, path: '/graphql' }
   );
 
@@ -72,25 +99,11 @@ async function startServer() {
       //   throw new AuthenticationError("mssing idtoken");
       // }
 
-      let uid = null
-
-      if (req.headers.idtoken) {
-        console.log(`index | context: req.headers.idtoken=${req.headers.idtoken}`)
-        try {
-          let decodedToken = await firebaseAuth.verifyIdToken(req.headers.idtoken)
-          uid = decodedToken.uid;
-          console.log(`index | context: decode success, uid=${uid}`)
-
-        } catch (err) {
-          console.log(`err!! + ${err}`)
-          throw new AuthenticationError(err);
-        }
-      }
+      let uid = await validateIdToken(req.headers);
 
       return {
-        uid: uid ? uid : 'a4H7anucnXWGBV4QR7FEf7iZYXv2',
-        idToken: req.headers.idtoken,
-        user: undefined
+        uid: uid ? uid : 'teQTnjYiQrRj8jTcLuHWFOLAta82',
+        idToken: req.headers.idtoken
       }
     },
 
@@ -110,9 +123,33 @@ async function startServer() {
   await server.start();
   server.applyMiddleware({ app });
 
-  await new Promise(r => httpServer.listen({ port: 4000 }, r));
-  console.log(`🚀 ${process.env.NODE_ENV} Server ready at http://localhost:4000${server.graphqlPath}`);
+  httpServer.listen(
+    { port: 4000 },
+    () => console.log(`🚀 ${process.env.NODE_ENV} Server ready at http://localhost:4000${server.graphqlPath}`)
+  )
 }
 
 applyEnvironment();
 startServer();
+
+async function validateIdToken(header) {
+  if (!header) {
+    return null
+  }
+
+  let uid = null;
+
+  if (header.idtoken) {
+    console.log(`index | context: header.idtoken=${header.idtoken}`);
+    try {
+      let decodedToken = await firebaseAuth.verifyIdToken(header.idtoken);
+      uid = decodedToken.uid;
+      console.log(`index | context: decode success, uid=${uid}`);
+
+    } catch (err) {
+      console.log(`err!! + ${err}`);
+      throw new AuthenticationError(err);
+    }
+  }
+  return uid;
+}

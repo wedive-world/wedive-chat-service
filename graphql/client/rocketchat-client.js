@@ -1,3 +1,6 @@
+const { randomUUID } = require('crypto')
+const WebSocket = require('ws')
+
 class RocketChatClient {
     constructor() {
         if (!RocketChatClient.instance) {
@@ -15,6 +18,8 @@ class RocketChatClient {
 
         this._userIdCache = new LRU(100)
         this._userTokenCache = new LRU(100)
+
+        this.socketMap = new Map()
 
         return RocketChatClient.instance
     }
@@ -49,7 +54,7 @@ class RocketChatClient {
             }
         )
 
-        console.log(`RocketChatClient | login: result=${JSON.stringify(result)}`)
+        console.log(`RocketChatClient | login: result.status=${JSON.stringify(result.status)}`)
 
         return result
     }
@@ -82,6 +87,10 @@ class RocketChatClient {
         return process.env.ROCKET_CHAT_URL
     }
 
+    _getWssHost() {
+        return process.env.ROCKET_CHAT_WSS
+    }
+
     async post(method, header, postData) {
 
         const url = `${this._getHost()}${method}`
@@ -95,7 +104,7 @@ class RocketChatClient {
                     headers: header
                 })
 
-            console.log(`RocketChatClient | POST: status=${status} statusText=${statusText} data=${JSON.stringify(data)}`)
+            console.log(`RocketChatClient | POST: status=${status} statusText=${statusText}`)// data=${JSON.stringify(data)}`)
             return data
 
         } catch (err) {
@@ -116,13 +125,100 @@ class RocketChatClient {
                 {
                     headers: header
                 })
-            console.log(`RocketChatClient | GET: status=${status}, statusText=${statusText} data=${JSON.stringify(data)}`)
+            console.log(`RocketChatClient | GET: status=${status}, statusText=${statusText}`)// data=${JSON.stringify(data)}`)
             return data
 
         } catch (err) {
             console.log(`RocketChatClient | GET: method=${method} err=${JSON.stringify(err)}`)
             return err
         }
+    }
+
+    async subscribeChatRoomMessage(uid, roomId, subSession, onMessage) {
+        console.log(`RocketChatClient | subscribe: uid=${uid}}, roomId=${roomId}`)
+
+        const loginSession = randomUUID()
+        let userHeader = await this.generateUserHeader(uid)
+        console.log(`RocketChatClient | userHeader created!`)
+
+        const webSocket = new WebSocket(this._getWssHost())
+
+        console.log(`RocketChatClient | socket created!, url=${webSocket.url} connected=${webSocket.readyState}`)
+
+        webSocket.onopen = async function () {
+            console.log('RocketChatClient | socket opened!');
+
+            webSocket.send(JSON.stringify({
+                "msg": "connect",
+                "version": "1",
+                "support": ["1"]
+            }))
+        };
+
+        webSocket.onmessage = async function (event) {
+            let response = JSON.parse(event.data)
+            console.log(`RocketChatClient | onmessage: ${JSON.stringify(response)}`);
+
+            if (response.msg == 'ping') {
+                let rocketChatClient = new RocketChatClient()
+                if (!rocketChatClient.socketMap.has(subSession)) {
+                    return;
+                }
+
+                console.log('pong!');
+                webSocket.send(JSON.stringify({
+                    msg: 'pong'
+                }))
+                return
+            }
+
+            if (response.msg == 'connected') {
+
+                webSocket.send(JSON.stringify({
+                    msg: 'method',
+                    method: 'login',
+                    id: loginSession,
+                    params: [
+                        { 'resume': userHeader['X-Auth-Token'] }
+                    ]
+                }))
+                return
+            }
+
+            if (response.msg == 'result' && response.id == loginSession) {
+
+                webSocket.send(JSON.stringify({
+                    "msg": "sub",
+                    "id": subSession,
+                    "name": "stream-room-messages",
+                    "params": [
+                        roomId
+                    ]
+                }))
+                return
+            }
+
+            if (response.msg == 'changed'
+                && response.collection == 'stream-room-messages'
+                && response.fields.eventName == roomId) {
+                onMessage(response.fields.args)
+            }
+        }
+
+        this.socketMap.set(subSession, webSocket)
+
+        return subSession
+    }
+
+    expireSession(sessionId) {
+        if (!this.socketMap.has(sessionId)) {
+            return
+        }
+
+        let socket = this.socketMap.get(sessionId)
+        this.socketMap.delete(sessionId)
+
+        socket.close()
     }
 }
 
