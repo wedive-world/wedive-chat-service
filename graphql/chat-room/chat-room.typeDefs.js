@@ -44,6 +44,7 @@ type ChatRoom {
     name: String
     lastMessageAt: String
     numOfmessages: Int
+    unread: Int
 
     canLeave: Boolean
     readOnly: Boolean

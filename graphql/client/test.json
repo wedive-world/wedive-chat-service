@@ -1,19 +1,99 @@
 {
-    "role": {
-        "type": "select",
-        "defaultValue": "student",
-        "options": [
-            "teacher",
-            "student"
-        ],
-        "required": true,
-        "modifyRecordField": {
-            "array": true,
-            "field": "roles"
+    "update": [
+        {
+            "_id": "LNaKzPP2jFTdeu6oMwLbB42HJpvLvGXL3B",
+            "t": "d",
+            "usernames": [
+                "teQTnjYiQrRj8jTcLuHWFOLAta82",
+                "vNGp2P5dvGSMXFLMeWMizMqBNtQ2"
+            ],
+            "usersCount": 2,
+            "ts": "2021-12-30T04:35:50.466Z",
+            "uids": [
+                "LNaKzPP2jFTdeu6oM",
+                "wLbB42HJpvLvGXL3B"
+            ],
+            "_updatedAt": "2022-01-01T11:34:02.882Z",
+            "lastMessage": {
+                "alias": "",
+                "msg": "[[basic/11.gif]]",
+                "attachments": [],
+                "parseUrls": true,
+                "groupable": false,
+                "ts": "2022-01-01T11:34:02.854Z",
+                "u": {
+                    "_id": "LNaKzPP2jFTdeu6oM",
+                    "username": "vNGp2P5dvGSMXFLMeWMizMqBNtQ2",
+                    "name": "짱스"
+                },
+                "rid": "LNaKzPP2jFTdeu6oMwLbB42HJpvLvGXL3B",
+                "urls": [],
+                "mentions": [],
+                "channels": [],
+                "md": [
+                    {
+                        "type": "PARAGRAPH",
+                        "value": [
+                            {
+                                "type": "PLAIN_TEXT",
+                                "value": "[[basic/11.gif]]"
+                            }
+                        ]
+                    }
+                ],
+                "_updatedAt": "2022-01-01T11:34:02.871Z",
+                "_id": "HcTScKwteMEkB7Sug"
+            },
+            "lm": "2022-01-01T11:34:02.854Z"
+        },
+        {
+            "_id": "jdvB4EWHjjvAurA8CwLbB42HJpvLvGXL3B",
+            "t": "d",
+            "usernames": [
+                "root",
+                "teQTnjYiQrRj8jTcLuHWFOLAta82"
+            ],
+            "usersCount": 2,
+            "ts": "2021-12-28T10:44:14.868Z",
+            "uids": [
+                "jdvB4EWHjjvAurA8C",
+                "wLbB42HJpvLvGXL3B"
+            ],
+            "_updatedAt": "2022-01-03T13:39:44.045Z",
+            "lastMessage": {
+                "alias": "",
+                "msg": "test",
+                "attachments": [],
+                "parseUrls": true,
+                "groupable": false,
+                "ts": "2022-01-03T13:39:44.036Z",
+                "u": {
+                    "_id": "wLbB42HJpvLvGXL3B",
+                    "username": "teQTnjYiQrRj8jTcLuHWFOLAta82",
+                    "name": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+                },
+                "rid": "jdvB4EWHjjvAurA8CwLbB42HJpvLvGXL3B",
+                "unread": true,
+                "urls": [],
+                "mentions": [],
+                "channels": [],
+                "md": [
+                    {
+                        "type": "PARAGRAPH",
+                        "value": [
+                            {
+                                "type": "PLAIN_TEXT",
+                                "value": "test"
+                            }
+                        ]
+                    }
+                ],
+                "_updatedAt": "2022-01-03T13:39:44.039Z",
+                "_id": "peeXRAopWXkYozy6k"
+            },
+            "lm": "2022-01-03T13:39:44.036Z"
         }
-    },
-    "fcmToken": {
-        "type": "text",
-        "required": false
-    }
+    ],
+    "remove": [],
+    "success": true
 }

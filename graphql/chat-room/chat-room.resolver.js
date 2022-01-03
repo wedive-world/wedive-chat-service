@@ -45,9 +45,24 @@ async function getJoinedRoomList(uid) {
         console.log(`chat-room-resolver | getJoinedRoomList: failed, result=${JSON.stringify(result)}`)
         return null
     }
+    console.log(`chat-room-resolver | getJoinedRoomList: result=${JSON.stringify(result)}`)
+
+    let subscriptions = await client.get('/api/v1/subscriptions.get', userHeader)
+    console.log(`chat-room-resolver | getJoinedRoomList: subscriptions=${JSON.stringify(subscriptions)}`)
+
+    let subscriptionMap = new Map()
+    subscriptions.update.forEach(subscription => {
+        subscriptionMap.set(subscription.rid, subscription)
+    });
 
     return result.update
         .map(room => convertChatRoom(room))
+        .map(chatRoom => {
+            let subscription = subscriptionMap.get(chatRoom._id)
+            chatRoom.unread = subscription.unread
+            chatRoom.name = subscription.name
+            return chatRoom
+        })
 }
 
 async function getChatRoom(uid, roomId) {
