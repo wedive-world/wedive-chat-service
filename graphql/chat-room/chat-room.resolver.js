@@ -32,6 +32,12 @@ module.exports = {
             console.log(`mutation | leaveRoom: args=${JSON.stringify(args)}`)
             console.log(`mutation | leaveRoom: context=${JSON.stringify(context)}`)
             return await leaveRoom(context.uid, args.roomId)
+        },
+
+        async markRead(parent, args, context, info) {
+            console.log(`mutation | markRead: args=${JSON.stringify(args)}`)
+            console.log(`mutation | markRead: context=${JSON.stringify(context)}`)
+            return await markRead(context.uid, args.roomId)
         }
     },
 };
@@ -88,15 +94,41 @@ async function leaveRoom(userId, roomId) {
     let result = await client.post(
         '/api/v1/rooms.leave',
         userHeader,
-        { roomId: roomId }
+        { rid: roomId }
     )
 
     if (!result.success) {
         console.log(`chat-room-resolver | leaveRoom: failed, result=${JSON.stringify(result)}`)
-        return false
+        return {
+            success: false
+        }
     }
 
-    return true
+    return {
+        success: true
+    }
+}
+
+async function markRead(uid, roomId) {
+
+    let userHeader = await client.generateUserHeader(uid)
+
+    let result = await client.post(
+        '/api/v1/subscriptions.read',
+        userHeader,
+        { rid: roomId }
+    )
+
+    if (!result.success) {
+        console.log(`chat-room-resolver | markRead: failed, result=${JSON.stringify(result)}`)
+        return {
+            success: false
+        }
+    }
+
+    return {
+        success: true
+    }
 }
 
 function convertChatRoom(rocketChatRoom) {

@@ -7,7 +7,8 @@ type Query {
 }
 
 type Mutation {
-    leaveRoom(roomId: String!): Boolean!
+    markRead(roomId: String!): Response!
+    leaveRoom(roomId: String!): Response!
 }
 
 # {
