@@ -9,6 +9,9 @@ type Query {
 type Mutation {
     markRead(roomId: String!): Response!
     leaveRoom(roomId: String!): Response!
+    createRoom(name: String!, description: String!): ChatRoom
+    invite(roomId: String!, uid: String!): Response!
+    kick(roomId: String!, uid: String!): Response!
 }
 
 # {
@@ -40,15 +43,15 @@ type Mutation {
 # }
 type ChatRoom {
     _id: String
+
     type: ChatRoomType
-    createdAt: Date
     name: String
+
     lastMessageAt: String
     numOfmessages: Int
     unread: Int
 
-    canLeave: Boolean
-    readOnly: Boolean
+    createdAt: Date
 }
 
 enum ChatRoomType {

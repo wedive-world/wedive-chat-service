@@ -13,7 +13,7 @@ const roomTypeMap = {
 module.exports = {
     ChatMessage: {
         async chatRoom(parent, args, context, info) {
-            console.log(`chat-room-resolver: parent=${JSON.stringify(parent)}`)
+            console.log(`chat-room-resolver | chatRoom: parent=${JSON.stringify(parent)}`)
             return await getChatRoom(context.uid, parent.chatRoom)
         }
     },
@@ -23,7 +23,6 @@ module.exports = {
             console.log(`query | getJoinedRoomList: context=${JSON.stringify(context)}`)
             return await getJoinedRoomList(context.uid)
         },
-
     },
 
     Mutation: {
@@ -38,7 +37,17 @@ module.exports = {
             console.log(`mutation | markRead: args=${JSON.stringify(args)}`)
             console.log(`mutation | markRead: context=${JSON.stringify(context)}`)
             return await markRead(context.uid, args.roomId)
-        }
+        },
+
+        async createRoom(parent, args, context, info) {
+            return await createRoom(context.uid, args.name, args.description)
+        },
+        async invite(parent, args, context, info) {
+            return await invite(context.uid, args.roomId, args.uid)
+        },
+        async kick(parent, args, context, info) {
+            return await kick(context.uid, args.roomId, args.uid)
+        },
     },
 };
 
@@ -66,7 +75,6 @@ async function getJoinedRoomList(uid) {
         .map(chatRoom => {
             let subscription = subscriptionMap.get(chatRoom._id)
             chatRoom.unread = subscription.unread
-            chatRoom.name = subscription.name
             return chatRoom
         })
 }
@@ -85,6 +93,22 @@ async function getChatRoom(uid, roomId) {
     }
 
     return convertChatRoom(result.room)
+}
+
+async function getChannelInfo(uid, roomId) {
+
+    let userHeader = await client.generateUserHeader(uid)
+    let queryParams = {
+        roomId: roomId
+    }
+
+    let result = await client.get('/api/v1/channels.info', userHeader, queryParams)
+    if (!result.success) {
+        console.log(`chat-room-resolver | getChatRoom: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return convertChatRoom(result.channel)
 }
 
 async function leaveRoom(userId, roomId) {
@@ -130,18 +154,97 @@ async function markRead(uid, roomId) {
         success: true
     }
 }
+async function createRoom(uid, roomName, description) {
+
+    let userHeader = await client.generateUserHeader(uid)
+
+    let result = await client.post(
+        '/api/v1/channels.create',
+        userHeader,
+        {
+            name: roomName,
+            members: [uid]
+        }
+    )
+
+    if (!result.success) {
+        console.log(`chat-room-resolver | createRoom: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    let descriptionResult = await client.post(
+        '/api/v1/channels.setDescription',
+        userHeader,
+        {
+            roomId: result.channel._id,
+            description: description
+        }
+    )
+
+    if (!descriptionResult.success) {
+        console.log(`chat-room-resolver | setDescription: failed, result=${JSON.stringify(descriptionResult)}`)
+    }
+
+    return convertChatRoom(result.channel)
+}
+
+async function invite(uid, roomId, userId) {
+
+    let userHeader = await client.generateUserHeader(uid)
+
+    let result = await client.post(
+        '/api/v1/subscriptions.read',
+        userHeader,
+        { rid: roomId }
+    )
+
+    if (!result.success) {
+        console.log(`chat-room-resolver | markRead: failed, result=${JSON.stringify(result)}`)
+        return {
+            success: false
+        }
+    }
+
+    return {
+        success: true
+    }
+}
+
+async function kick(uid, roomId) {
+
+    let userHeader = await client.generateUserHeader(uid)
+
+    let result = await client.post(
+        '/api/v1/subscriptions.read',
+        userHeader,
+        { rid: roomId }
+    )
+
+    if (!result.success) {
+        console.log(`chat-room-resolver | markRead: failed, result=${JSON.stringify(result)}`)
+        return {
+            success: false
+        }
+    }
+
+    return {
+        success: true
+    }
+}
 
 function convertChatRoom(rocketChatRoom) {
     return {
         _id: rocketChatRoom._id,
         type: convertRoomType(rocketChatRoom.t),
-        createdAt: rocketChatRoom.ts,
-        name: rocketChatRoom.name,
-        canLeave: rocketChatRoom.cl,
-        readOnly: rocketChatRoom.ro,
-        userIds: rocketChatRoom.usernames,
+        name: rocketChatRoom.description,
+
         ownerUserId: rocketChatRoom.u ? rocketChatRoom.u.username : "",
-        lastChatMessage: rocketChatRoom.lastMessage
+        userIds: rocketChatRoom.usernames,
+        usersCount: rocketChatRoom.usersCount,
+
+        lastChatMessage: rocketChatRoom.lastMessage,
+
+        createdAt: rocketChatRoom.ts,
     }
 }
 

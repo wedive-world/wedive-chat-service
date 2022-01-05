@@ -4,12 +4,13 @@ const client = new RocketChatClient()
 module.exports = {
     ChatRoom: {
         async chatUsers(parent, args, context, info) {
-            console.log(`chat-user-resolver: parent=${JSON.stringify(parent)}`)
 
             let chatUsers = []
-            for (userId of parent.userIds) {
-                let chatUser = await getChatUserById(userId)
-                chatUsers.push(chatUser)
+            if (parent.userIds && parent.userIds.length > 0) {
+                for (userId of parent.userIds) {
+                    let chatUser = await getChatUserById(userId)
+                    chatUsers.push(chatUser)
+                }
             }
 
             return chatUsers
@@ -73,6 +74,26 @@ async function getChatUserById(_id) {
     }
 
     return convertUser(result.user)
+}
+
+async function getChannelMemberList(uid, roomId) {
+
+    let result = await client.get(
+        '/api/v1/channels.members',
+        await client.generateUserHeader(uid),
+        {
+            roomId: roomId
+        }
+    )
+
+    if (!result.success) {
+        console.log(`chat-user-service | getChannelMemberList: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    let userList = result.members.map(user => convertUser(user))
+    console.log(`chat-user-resolver | getChannelMemberList: userList=${JSON.stringify(userList)}`)
+    return userList
 }
 
 async function createUser(_id, email, name) {
@@ -159,12 +180,8 @@ function convertUser(rocketChatUser) {
     return {
         _id: rocketChatUser.username,
         name: rocketChatUser.name,
-        type: rocketChatUser.type,
-        active: rocketChatUser.active,
-        email: rocketChatUser.emails.pop().address,
 
         avatarOrigin: rocketChatUser.avatarOrigin,
-        utcOffset: rocketChatUser.utcOffset,
 
         createdAt: rocketChatUser.createdAt,
         updatedAt: rocketChatUser._updatedAt
