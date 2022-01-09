@@ -38,6 +38,7 @@ module.exports = {
             }
 
             return messages.slice(args.skip, args.skip + args.limit)
+                .reverse()
         },
     },
 
@@ -69,23 +70,30 @@ module.exports = {
                 console.log(`subscription | subscribeRoomMessage: args=${JSON.stringify(args)}`)
                 console.log(`subscription | subscribeRoomMessage: context=${JSON.stringify(context)}`)
 
-                let roomId = args.roomId
+                let roomIds = args.roomIds
 
                 const pubsub = new PubSub();
 
                 await rocketChatClient.subscribeChatRoomMessage(
                     context.uid,
-                    roomId,
+                    roomIds,
                     context.sessionId,
                     (messages) => {
-                        let chatMessages = messages.map(message => convertChatMessage(message))
-                        pubsub.publish(roomId, {
-                            subscribeRoomMessage: chatMessages
-                        })
+                        let chatMessages = messages
+                            .map(message => convertChatMessage(message))
+                            .map(message => {
+                                message.createdAt = new Date(message.createdAt.$date)
+                                return message
+                            })
+                            .forEach(message => {
+                                pubsub.publish(message.chatRoom, {
+                                    subscribeRoomMessage: message
+                                })
+                            })
                     }
                 )
 
-                return pubsub.asyncIterator([roomId])
+                return pubsub.asyncIterator(roomIds)
             }
         },
     },
@@ -172,9 +180,8 @@ async function syncMessage(uid, roomId, updatedSince) {
         return null
     }
 
-    // console.log(`chat!!! ${JSON.stringify(result.result.updated)}`)
-
-    return result.result.updated.map(rocketChatMessage => convertChatMessage(rocketChatMessage))
+    return result.result
+        .updated.map(rocketChatMessage => convertChatMessage(rocketChatMessage))
 }
 
 function convertChatMessage(rocketChatMessage) {

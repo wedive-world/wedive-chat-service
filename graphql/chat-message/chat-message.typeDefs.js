@@ -4,7 +4,7 @@ module.exports = gql`
 
 type Query {
     getMessagesByRoomIdSinceUpdated(roomId: String!, updatedSince: Date): [ChatMessage]
-    getMessagesByRoomId(roomId: String!, skip: Int = 0, limit: Int = 100): [ChatMessage]
+    getMessagesByRoomId(roomId: String!, skip: Int = 0, limit: Int = 30): [ChatMessage]
 }
 
 type Mutation {
@@ -14,7 +14,7 @@ type Mutation {
 }
 
 type Subscription {
-    subscribeRoomMessage(roomId: String!): [ChatMessage]
+    subscribeRoomMessage(roomIds: [String]!): ChatMessage
 }
 
 # interface IUser {

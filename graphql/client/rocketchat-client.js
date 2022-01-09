@@ -134,8 +134,8 @@ class RocketChatClient {
         }
     }
 
-    async subscribeChatRoomMessage(uid, roomId, subSession, onMessage) {
-        console.log(`RocketChatClient | subscribe: uid=${uid}}, roomId=${roomId}`)
+    async subscribeChatRoomMessage(uid, roomIds, subSession, onMessage) {
+        console.log(`RocketChatClient | subscribe: uid=${uid}}, roomId=${roomIds}`)
 
         const loginSession = randomUUID()
         let userHeader = await this.generateUserHeader(uid)
@@ -191,16 +191,15 @@ class RocketChatClient {
                     "msg": "sub",
                     "id": subSession,
                     "name": "stream-room-messages",
-                    "params": [
-                        roomId
-                    ]
+                    "params": roomIds
+                    
                 }))
                 return
             }
 
             if (response.msg == 'changed'
                 && response.collection == 'stream-room-messages'
-                && response.fields.eventName == roomId) {
+                && roomIds.includes(response.fields.eventName)) {
                 onMessage(response.fields.args)
             }
         }

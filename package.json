@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start-local": "NODE_ENV=local pm2-runtime start index.js --watch",
-    "start-development": "NODE_ENV=development pm2-runtime start index.js",
+    "start-development": "NODE_ENV=development pm2-runtime start index.js --watch",
     "start-production": "NODE_ENV=production pm2-runtime start index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
