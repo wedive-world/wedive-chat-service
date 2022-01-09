@@ -185,6 +185,10 @@ async function syncMessage(uid, roomId, updatedSince) {
 }
 
 function convertChatMessage(rocketChatMessage) {
+    if (!rocketChatMessage) {
+        return 
+    }
+    
     return {
         _id: rocketChatMessage._id,
         author: rocketChatMessage.u.username,

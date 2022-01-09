@@ -48,11 +48,8 @@ type Mutation {
 # }
 type ChatUser {
     _id: String
-    active: Boolean
     name: String
-    email: String
     avatarOrigin: String
-    utcOffset: Int
 
     createdAt: Date
     updatedAt: Date
@@ -61,9 +58,6 @@ type ChatUser {
 input ChatUserInput {
     uid: String
     name: String
-    email: String
-    avatarOrigin: String
-    fcmToken: String
 
     createdAt: Date
     updatedAt: Date
@@ -71,6 +65,7 @@ input ChatUserInput {
 
 type ChatRoom {
     chatUsers: [ChatUser]
+    usersCount: Int
     owner: ChatUser
 }
 

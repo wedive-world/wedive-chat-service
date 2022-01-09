@@ -1,99 +1,319 @@
 {
-    "update": [
-        {
-            "_id": "LNaKzPP2jFTdeu6oMwLbB42HJpvLvGXL3B",
-            "t": "d",
-            "usernames": [
-                "teQTnjYiQrRj8jTcLuHWFOLAta82",
-                "vNGp2P5dvGSMXFLMeWMizMqBNtQ2"
-            ],
-            "usersCount": 2,
-            "ts": "2021-12-30T04:35:50.466Z",
-            "uids": [
-                "LNaKzPP2jFTdeu6oM",
-                "wLbB42HJpvLvGXL3B"
-            ],
-            "_updatedAt": "2022-01-01T11:34:02.882Z",
-            "lastMessage": {
-                "alias": "",
-                "msg": "[[basic/11.gif]]",
-                "attachments": [],
-                "parseUrls": true,
-                "groupable": false,
-                "ts": "2022-01-01T11:34:02.854Z",
-                "u": {
-                    "_id": "LNaKzPP2jFTdeu6oM",
-                    "username": "vNGp2P5dvGSMXFLMeWMizMqBNtQ2",
-                    "name": "짱스"
-                },
-                "rid": "LNaKzPP2jFTdeu6oMwLbB42HJpvLvGXL3B",
-                "urls": [],
-                "mentions": [],
-                "channels": [],
-                "md": [
-                    {
-                        "type": "PARAGRAPH",
-                        "value": [
-                            {
-                                "type": "PLAIN_TEXT",
-                                "value": "[[basic/11.gif]]"
-                            }
-                        ]
-                    }
-                ],
-                "_updatedAt": "2022-01-01T11:34:02.871Z",
-                "_id": "HcTScKwteMEkB7Sug"
-            },
-            "lm": "2022-01-01T11:34:02.854Z"
-        },
-        {
-            "_id": "jdvB4EWHjjvAurA8CwLbB42HJpvLvGXL3B",
-            "t": "d",
-            "usernames": [
-                "root",
-                "teQTnjYiQrRj8jTcLuHWFOLAta82"
-            ],
-            "usersCount": 2,
-            "ts": "2021-12-28T10:44:14.868Z",
-            "uids": [
-                "jdvB4EWHjjvAurA8C",
-                "wLbB42HJpvLvGXL3B"
-            ],
-            "_updatedAt": "2022-01-03T13:39:44.045Z",
-            "lastMessage": {
-                "alias": "",
-                "msg": "test",
-                "attachments": [],
-                "parseUrls": true,
-                "groupable": false,
-                "ts": "2022-01-03T13:39:44.036Z",
-                "u": {
-                    "_id": "wLbB42HJpvLvGXL3B",
-                    "username": "teQTnjYiQrRj8jTcLuHWFOLAta82",
-                    "name": "teQTnjYiQrRj8jTcLuHWFOLAta82"
-                },
-                "rid": "jdvB4EWHjjvAurA8CwLbB42HJpvLvGXL3B",
-                "unread": true,
-                "urls": [],
-                "mentions": [],
-                "channels": [],
-                "md": [
-                    {
-                        "type": "PARAGRAPH",
-                        "value": [
-                            {
-                                "type": "PLAIN_TEXT",
-                                "value": "test"
-                            }
-                        ]
-                    }
-                ],
-                "_updatedAt": "2022-01-03T13:39:44.039Z",
-                "_id": "peeXRAopWXkYozy6k"
-            },
-            "lm": "2022-01-03T13:39:44.036Z"
-        }
+    "_id": "3bEP6dvd6xCtvEH8M",
+    "fname": "1123d",
+    "customFields": {},
+    "name": "1123d",
+    "t": "c",
+    "usersCount": 2,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T12:44:02.150Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T12:44:02.183Z"
+},
+{
+    "_id": "9BNESaTaaP52TEZ9j",
+    "fname": "asdfaef23f1f",
+    "customFields": {},
+    "name": "asdfaef23f1f",
+    "t": "c",
+    "usersCount": 1,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T08:30:58.626Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T08:30:58.644Z"
+},
+{
+    "_id": "A79Cf82LDqhDw9vqb",
+    "fname": "1123dddd",
+    "customFields": {},
+    "name": "1123dddd",
+    "t": "c",
+    "usersCount": 2,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T12:45:22.644Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T12:45:22.673Z"
+},
+{
+    "_id": "LNaKzPP2jFTdeu6oMwLbB42HJpvLvGXL3B",
+    "t": "d",
+    "usernames": [
+        "teQTnjYiQrRj8jTcLuHWFOLAta82",
+        "vNGp2P5dvGSMXFLMeWMizMqBNtQ2"
     ],
-    "remove": [],
-    "success": true
+    "usersCount": 2,
+    "ts": "2021-12-30T04:35:50.466Z",
+    "uids": [
+        "LNaKzPP2jFTdeu6oM",
+        "wLbB42HJpvLvGXL3B"
+    ],
+    "_updatedAt": "2022-01-03T23:14:50.426Z",
+    "lastMessage": {
+        "alias": "",
+        "msg": "ㅎㅎ",
+        "attachments": [],
+        "parseUrls": true,
+        "groupable": false,
+        "ts": "2022-01-03T23:14:50.418Z",
+        "u": {
+            "_id": "wLbB42HJpvLvGXL3B",
+            "username": "teQTnjYiQrRj8jTcLuHWFOLAta82",
+            "name": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+        },
+        "rid": "LNaKzPP2jFTdeu6oMwLbB42HJpvLvGXL3B",
+        "unread": true,
+        "urls": [],
+        "mentions": [],
+        "channels": [],
+        "md": [
+            {
+                "type": "PARAGRAPH",
+                "value": [
+                    {
+                        "type": "PLAIN_TEXT",
+                        "value": "ㅎㅎ"
+                    }
+                ]
+            }
+        ],
+        "_updatedAt": "2022-01-03T23:14:50.420Z",
+        "_id": "CndTQr6eZSkNKqcW7"
+    },
+    "lm": "2022-01-03T23:14:50.418Z"
+},
+{
+    "_id": "TJbQLiX5P7Y7p6ZmK",
+    "fname": "zlzlzlzlzlzl2",
+    "customFields": {},
+    "name": "zlzlzlzlzlzl2",
+    "t": "c",
+    "usersCount": 1,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T08:19:17.826Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T08:19:17.842Z"
+},
+{
+    "_id": "WeSpsoCdm4uNqg3ss",
+    "fname": "asdfaef23f1f222",
+    "customFields": {},
+    "name": "asdfaef23f1f222",
+    "t": "c",
+    "usersCount": 1,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T08:31:50.067Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T08:31:50.191Z",
+    "description": "test description"
+},
+{
+    "_id": "WydD4ZDSd7cj3xu3W",
+    "fname": "asdfaef23f1fddd222",
+    "customFields": {},
+    "name": "asdfaef23f1fddd222",
+    "t": "c",
+    "usersCount": 2,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T08:32:47.938Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T08:32:48.075Z",
+    "description": "test description"
+},
+{
+    "_id": "jbjoW3z9r57f84Gtd",
+    "fname": "zzzzzzz22222zz",
+    "customFields": {},
+    "name": "zzzzzzz22222zz",
+    "t": "c",
+    "usersCount": 2,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T12:41:29.175Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T12:41:29.206Z"
+},
+{
+    "_id": "jdvB4EWHjjvAurA8CwLbB42HJpvLvGXL3B",
+    "t": "d",
+    "usernames": [
+        "root",
+        "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    ],
+    "usersCount": 2,
+    "ts": "2021-12-28T10:44:14.868Z",
+    "uids": [
+        "jdvB4EWHjjvAurA8C",
+        "wLbB42HJpvLvGXL3B"
+    ],
+    "_updatedAt": "2022-01-03T14:02:10.292Z",
+    "lastMessage": {
+        "alias": "",
+        "msg": "test",
+        "attachments": [],
+        "parseUrls": true,
+        "groupable": false,
+        "ts": "2022-01-03T13:39:44.036Z",
+        "u": {
+            "_id": "wLbB42HJpvLvGXL3B",
+            "username": "teQTnjYiQrRj8jTcLuHWFOLAta82",
+            "name": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+        },
+        "rid": "jdvB4EWHjjvAurA8CwLbB42HJpvLvGXL3B",
+        "urls": [],
+        "mentions": [],
+        "channels": [],
+        "md": [
+            {
+                "type": "PARAGRAPH",
+                "value": [
+                    {
+                        "type": "PLAIN_TEXT",
+                        "value": "test"
+                    }
+                ]
+            }
+        ],
+        "_updatedAt": "2022-01-03T13:39:44.039Z",
+        "_id": "peeXRAopWXkYozy6k"
+    },
+    "lm": "2022-01-03T13:39:44.036Z"
+},
+{
+    "_id": "k6jdY4zc8PZPDhziv",
+    "fname": "1123dddddd",
+    "customFields": {},
+    "name": "1123dddddd",
+    "t": "c",
+    "usersCount": 1,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T12:47:07.394Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T12:47:07.524Z",
+    "description": "test description2"
+},
+{
+    "_id": "kvZbk6TmmKNodfQo4",
+    "fname": "1123ddd",
+    "customFields": {},
+    "name": "1123ddd",
+    "t": "c",
+    "usersCount": 2,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T12:44:30.347Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T12:44:30.375Z"
+},
+{
+    "_id": "mg4x5HxxcvRgo4JJB",
+    "fname": "zzzzzzz222zz",
+    "customFields": {},
+    "name": "zzzzzzz222zz",
+    "t": "c",
+    "usersCount": 2,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T08:40:06.799Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T12:54:45.926Z",
+    "lastMessage": {
+        "_id": "NZhkh7BJoMGCWJEQm",
+        "rid": "mg4x5HxxcvRgo4JJB",
+        "msg": "adf",
+        "ts": "2022-01-04T12:54:45.906Z",
+        "u": {
+            "_id": "jdvB4EWHjjvAurA8C",
+            "username": "root",
+            "name": "root"
+        },
+        "unread": true,
+        "urls": [],
+        "mentions": [],
+        "channels": [],
+        "md": [
+            {
+                "type": "PARAGRAPH",
+                "value": [
+                    {
+                        "type": "PLAIN_TEXT",
+                        "value": "adf"
+                    }
+                ]
+            }
+        ],
+        "_updatedAt": "2022-01-04T12:54:45.915Z"
+    },
+    "lm": "2022-01-04T12:54:45.906Z"
+},
+{
+    "_id": "mz2tBQLiYSRrbFAFa",
+    "fname": "zlzlzlzlzlzl",
+    "customFields": {},
+    "name": "zlzlzlzlzlzl",
+    "t": "c",
+    "usersCount": 1,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T08:09:47.463Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T08:09:47.477Z"
+},
+{
+    "_id": "ufosRnbmvnkpy5gHY",
+    "fname": "zzzzzzzzz",
+    "customFields": {},
+    "name": "zzzzzzzzz",
+    "t": "c",
+    "usersCount": 2,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T08:37:51.029Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T08:37:51.057Z"
+},
+{
+    "_id": "wzvWWEFvDBZTTh6rd",
+    "fname": "asidjfiasjdf",
+    "customFields": {},
+    "name": "asidjfiasjdf",
+    "t": "c",
+    "usersCount": 1,
+    "u": {
+        "_id": "wLbB42HJpvLvGXL3B",
+        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+    },
+    "ts": "2022-01-04T08:04:14.132Z",
+    "ro": false,
+    "_updatedAt": "2022-01-04T08:04:14.162Z"
 }
