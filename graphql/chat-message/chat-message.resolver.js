@@ -53,7 +53,7 @@ module.exports = {
         async postMessageToUser(parent, args, context, info) {
 
             console.log(`mutation | postMessageToUser: args=${JSON.stringify(args)}`)
-            return await postMessage(context.uid, `@${args.userId}`, args.input)
+            return await postDirectMessage(context.uid, args.userId, args.input)
         },
 
         async postMessageToChannel(parent, args, context, info) {
@@ -79,7 +79,7 @@ module.exports = {
                     roomIds,
                     context.sessionId,
                     (messages) => {
-                        let chatMessages = messages
+                        messages
                             .map(message => convertChatMessage(message))
                             .map(message => {
                                 message.createdAt = new Date(message.createdAt.$date)
@@ -98,6 +98,48 @@ module.exports = {
         },
     },
 };
+
+async function postDirectMessage(senderUserId, targetUserId, text, /* attachment */) {
+
+    let userHeader = await rocketChatClient.generateUserHeader(senderUserId)
+
+    let result = await rocketChatClient.post(
+        '/api/v1/chat.postMessage',
+        userHeader,
+        {
+            roomId: `@${targetUserId}`,
+            text: text
+        }
+    )
+
+    if (!result.success) {
+        console.log(`chat-message-resolver | postMessage: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    console.log(`chat-message-resolver | result=${JSON.stringify(result)}`)
+
+    let avatarInfo = await rocketChatClient.get(
+        '/api/v1/users.getAvatar',
+        userHeader,
+        {
+            username: senderUserId
+        }
+    )
+    // console.log(`chat-message-resolver | avatarInfo=${JSON.stringify(avatarInfo)}`)
+
+    let chatMessage = convertChatMessage(result.message)
+    chatMessage.authorName = result.message.u.name
+    chatMessage.avatar = avatarInfo
+    let tokenList = await apiClient.getFcmTokenList([targetUserId]
+    )
+
+    if (tokenList && tokenList.length > 0) {
+        await firebaseClient.sendMulticast(tokenList, 'onNewChatMessage', chatMessage)
+    }
+
+    return chatMessage
+}
 
 async function postMessage(senderUserId, roomId, text, /* attachment */) {
 
@@ -186,9 +228,9 @@ async function syncMessage(uid, roomId, updatedSince) {
 
 function convertChatMessage(rocketChatMessage) {
     if (!rocketChatMessage) {
-        return 
+        return
     }
-    
+
     return {
         _id: rocketChatMessage._id,
         author: rocketChatMessage.u.username,
