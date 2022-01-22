@@ -40,7 +40,9 @@ module.exports = {
         },
 
         async createRoom(parent, args, context, info) {
-            return await createRoom(context.uid, args.name, args.description)
+            let membersUids = args.membersUids ? args.membersUids : [] 
+            membersUids.push(context.uid)
+            return await createRoom(args.name, args.description, membersUids)
         },
         async invite(parent, args, context, info) {
             return await invite(context.uid, args.roomId, args.uid)
@@ -154,7 +156,7 @@ async function markRead(uid, roomId) {
         success: true
     }
 }
-async function createRoom(uid, roomName, description) {
+async function createRoom(roomName, description, membersUids) {
 
     let userHeader = await client.generateUserHeader(uid)
 
@@ -163,7 +165,7 @@ async function createRoom(uid, roomName, description) {
         userHeader,
         {
             name: roomName,
-            members: [uid]
+            members: membersUids
         }
     )
 
