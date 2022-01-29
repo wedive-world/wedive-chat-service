@@ -28,10 +28,10 @@ module.exports = {
     },
 
     Query: {
-        async getChatUserById(parent, args, context, info) {
+        async getChatUserByUsername(parent, args, context, info) {
 
-            console.log(`query | getChatUserById: context=${JSON.stringify(context)}`)
-            return await getChatUserByUserName(context.uid)
+            console.log(`query | getChatUserByUsername: context=${JSON.stringify(context)}`)
+            return await getChatUserByUserName(args.username)
         },
 
     },
