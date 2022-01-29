@@ -8,7 +8,7 @@ module.exports = {
             let chatUsers = []
             if (parent.userIds && parent.userIds.length > 0) {
                 for (userId of parent.userIds) {
-                    let chatUser = await getChatUserByUsername(userId)
+                    let chatUser = await getChatUserByUserName(userId)
                     chatUsers.push(chatUser)
                 }
             }
