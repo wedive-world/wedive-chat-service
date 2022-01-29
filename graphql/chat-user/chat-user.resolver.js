@@ -23,7 +23,7 @@ module.exports = {
 
     ChatMessage: {
         async author(parent, args, context, info) {
-            return await getChatUserByUsername(parent.author)
+            return await getChatUserByUserName(parent.author)
         },
     },
 
