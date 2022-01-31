@@ -48,9 +48,7 @@ module.exports = {
         async updateChatUser(parent, args, context, info) {
 
             console.log(`mutation | updateChatUser: args=${JSON.stringify(args)}`)
-            let user = await getChatUserByUserName(context.uid)
-            console.log(`mutation | updateChatUser: user=${JSON.stringify(user)}`)
-            let chatUser = await updateUser(user._id, context.uid, args.name, args.avatarUrl)
+            let chatUser = await updateUser(context.uid, args.name, args.avatarUrl)
             return chatUser
         },
 
@@ -121,8 +119,8 @@ async function createUser(_id, email, name) {
     return convertUser(result.user)
 }
 
-async function updateUser(userId, uid, name, avatarUrl) {
-    console.log(`chat-user-service | updateUser: userId=${userId}, uid=${uid}, name=${name}, avatarUrl=${avatarUrl}}`)
+async function updateUser(uid, name, avatarUrl) {
+    console.log(`chat-user-service | updateUser: uid=${uid}, name=${name}, avatarUrl=${avatarUrl}}`)
 
     let success = true
     let reason = ''
@@ -130,7 +128,6 @@ async function updateUser(userId, uid, name, avatarUrl) {
     if (avatarUrl) {
 
         let avatarData = {
-            userId: userId,
             avatarUrl: avatarUrl
         }
 
@@ -138,12 +135,12 @@ async function updateUser(userId, uid, name, avatarUrl) {
         if (!avatarResult.success) {
             console.log(`chat-user-service | updateUser: failed, avatarResult=${JSON.stringify(avatarResult)}`)
             reason += avatarResult
+            success = false
         }
     }
 
     if (name) {
         let userData = {
-            // userId: userId,
             data: {
                 name: name
             }
@@ -153,6 +150,7 @@ async function updateUser(userId, uid, name, avatarUrl) {
         if (!userResult.success) {
             console.log(`chat-user-service | updateUser: failed, userResult=${JSON.stringify(userResult)}`)
             reason += userResult
+            success = false
         }
     }
 
