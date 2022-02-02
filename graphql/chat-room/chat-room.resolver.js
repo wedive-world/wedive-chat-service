@@ -116,11 +116,11 @@ async function getChannelInfo(uid, roomId) {
 async function leaveRoom(userId, roomId) {
 
     let userHeader = await client.generateUserHeader(userId)
-
+    
     let result = await client.post(
-        '/api/v1/rooms.leave',
+        '/api/v1/channels.leave',
         userHeader,
-        { rid: roomId }
+        { roomId: roomId }
     )
 
     if (!result.success) {
