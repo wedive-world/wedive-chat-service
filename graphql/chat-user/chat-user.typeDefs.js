@@ -48,6 +48,7 @@ type Mutation {
 # }
 type ChatUser {
     _id: String
+    uid: String
     name: String
     avatarOrigin: String
 

@@ -29,7 +29,7 @@ module.exports = {
 
     ChatUser: {
         async avatarOrigin(parent, args, context, info) {
-            return `https://admin.wedives.com/chat/api/v1/users.getAvatar?username=${parent._id}`
+            return `https://admin.wedives.com/chat/api/v1/users.getAvatar?username=${parent.uid}`
         },
     },
 
@@ -132,12 +132,12 @@ async function getChannelMemberList(uid, roomId) {
     return userList
 }
 
-async function createUser(_id, email, name) {
+async function createUser(uid, email, name) {
 
-    const hashPassword = client.generatePassword(_id)
+    const hashPassword = client.generatePassword(uid)
 
     const postData = {
-        username: _id,
+        username: uid,
         email: email,
         name: name,
         password: hashPassword,
@@ -223,7 +223,8 @@ function convertUser(rocketChatUser) {
     // console.log(`convertUser: rocketChatUser=${JSON.stringify(rocketChatUser)}`)
 
     return {
-        _id: rocketChatUser.username,
+        _id: rocketChatUser._id,
+        uid: rocketChatUser.username,
         name: rocketChatUser.name,
 
         avatarOrigin: rocketChatUser.avatarOrigin,

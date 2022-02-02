@@ -94,7 +94,7 @@ class RocketChatClient {
     async post(method, header, postData) {
 
         const url = `${this._getHost()}${method}`
-        console.log(`RocketChatClient | POST: url=${url} header=${JSON.stringify(header)} postData=${JSON.stringify(postData)}`)
+        console.log(`RocketChatClient | POST: url=${url} postData=${JSON.stringify(postData)}`)
 
         try {
             const { status, statusText, data } = await this._axios.post(
@@ -114,7 +114,7 @@ class RocketChatClient {
     }
 
     async get(method, header, queryParams) {
-        console.log(`RocketChatClient | GET: method=${method} header=${JSON.stringify(header)} queryParams=${JSON.stringify(queryParams)}`)
+        console.log(`RocketChatClient | GET: method=${method} queryParams=${JSON.stringify(queryParams)}`)
 
         try {
             const url = `${this._getHost()}${method}?${require('querystring').stringify(queryParams)}`
