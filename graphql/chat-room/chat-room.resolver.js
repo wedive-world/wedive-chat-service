@@ -40,7 +40,7 @@ module.exports = {
         },
 
         async createRoom(parent, args, context, info) {
-            let membersUids = args.membersUids ? args.membersUids : [] 
+            let membersUids = args.membersUids ? args.membersUids : []
             membersUids.push(context.uid)
             return await createRoom(args.name, args.description, membersUids)
         },
@@ -195,13 +195,16 @@ async function invite(uid, roomId, userId) {
     let userHeader = await client.generateUserHeader(uid)
 
     let result = await client.post(
-        '/api/v1/subscriptions.read',
+        '/api/v1/channels.invite',
         userHeader,
-        { rid: roomId }
+        {
+            roomId: roomId,
+            userId: userId
+        }
     )
 
     if (!result.success) {
-        console.log(`chat-room-resolver | markRead: failed, result=${JSON.stringify(result)}`)
+        console.log(`chat-room-resolver | invite: failed, result=${JSON.stringify(result)}`)
         return {
             success: false
         }
@@ -217,13 +220,13 @@ async function kick(uid, roomId) {
     let userHeader = await client.generateUserHeader(uid)
 
     let result = await client.post(
-        '/api/v1/subscriptions.read',
+        '/api/v1/channels.leave',
         userHeader,
-        { rid: roomId }
+        { roomId: roomId }
     )
 
     if (!result.success) {
-        console.log(`chat-room-resolver | markRead: failed, result=${JSON.stringify(result)}`)
+        console.log(`chat-room-resolver | kick: failed, result=${JSON.stringify(result)}`)
         return {
             success: false
         }
