@@ -65,7 +65,7 @@ async function getJoinedRoomList(uid) {
     console.log(`chat-room-resolver | getJoinedRoomList: result=${JSON.stringify(result)}`)
 
     let subscriptions = await client.get('/api/v1/subscriptions.get', userHeader)
-    console.log(`chat-room-resolver | getJoinedRoomList: subscriptions=${JSON.stringify(subscriptions)}`)
+    // console.log(`chat-room-resolver | getJoinedRoomList: subscriptions=${JSON.stringify(subscriptions)}`)
 
     let subscriptionMap = new Map()
     subscriptions.update.forEach(subscription => {
@@ -116,7 +116,7 @@ async function getChannelInfo(uid, roomId) {
 async function leaveRoom(userId, roomId) {
 
     let userHeader = await client.generateUserHeader(userId)
-    
+
     let result = await client.post(
         '/api/v1/channels.leave',
         userHeader,
