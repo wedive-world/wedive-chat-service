@@ -8,7 +8,7 @@ module.exports = {
             let chatUsers = []
             if (parent.userIds && parent.userIds.length > 0) {
                 for (userId of parent.userIds) {
-                    let chatUser = await getChatUserByUserName(userId)
+                    let chatUser = await getChatUserByUserId(userId)
                     chatUsers.push(chatUser)
                 }
             }
@@ -17,13 +17,19 @@ module.exports = {
         },
 
         async owner(parent, args, context, info) {
-            console.log(`chat-user-resolver: parent=${JSON.stringify(parent)}`)
+            return await getChatUserByUserId(parent.ownerUserId)
         },
     },
 
     ChatMessage: {
         async author(parent, args, context, info) {
             return await getChatUserByUserName(parent.author)
+        },
+    },
+
+    ChatUser: {
+        async avatarOrigin(parent, args, context, info) {
+            return `https://admin.wedives.com/chat/api/v1/users.getAvatar?username=${parent._id}`
         },
     },
 
@@ -74,6 +80,36 @@ async function getChatUserByUserName(userName) {
     }
 
     return convertUser(result.user)
+}
+
+async function getChatUserByUserId(userId) {
+
+    let queryParams = {
+        userId: userId
+    }
+
+    let result = await client.get('/api/v1/users.info', client.getAixosAdminHeader(), queryParams)
+    if (!result.success || !result.user) {
+        console.log(`chat-user-service | getChatUserById: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return convertUser(result.user)
+}
+
+async function getAvatarByUserName(username) {
+
+    let queryParams = {
+        username: username
+    }
+
+    let result = await client.get('/api/v1/users.getAvatar', client.getAixosAdminHeader(), queryParams)
+    if (!result) {
+        console.log(`chat-user-service | getAvatarByUserId: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return result
 }
 
 async function getChannelMemberList(uid, roomId) {
