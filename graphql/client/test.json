@@ -2,28 +2,36 @@
     "_id": "61c9e43bc9bc5441e6f3d906",
     "uid": "teQTnjYiQrRj8jTcLuHWFOLAta82",
     "authProvider": "firebase",
-    "oauthToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhYTE0OGNkMDcyOGUzMDNkMzI2ZGU1NjBhMzVmYjFiYTMyYTUxNDkiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTWluLWh5ZW9rIFl1biIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQVRYQUp5VHhsZzIwZkh6aTJpdXVNYi1XdFRrM2J4UU03U1FrQTRtMGh4dT1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93ZWRpdmUtcHJkIiwiYXVkIjoid2VkaXZlLXByZCIsImF1dGhfdGltZSI6MTY0MDA5MTg4NywidXNlcl9pZCI6InRlUVRuallpUXJSajhqVGNMdUhXRk9MQXRhODIiLCJzdWIiOiJ0ZVFUbmpZaVFyUmo4alRjTHVIV0ZPTEF0YTgyIiwiaWF0IjoxNjQyOTIzNjA0LCJleHAiOjE2NDI5MjcyMDQsImVtYWlsIjoib25seS5oeWVva0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNDgzMTQ4ODkwMDQ5ODkzMTk1NiJdLCJlbWFpbCI6WyJvbmx5Lmh5ZW9rQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.TPXNXI_wBhtVh_BkCxKNXSe4PvDtgx_2xBc6N7fR0mG64ulPfv1n4QiRaXJGe5Ii8fSaU0ck2WDwI054UPvXZyJLPSV74rwfAWKinTXC_Cf4g6EePaElEb-MYQIrCP7z_JLWeWZHJeNpWWVM5EaBz-dEyGUZEnXUWVxhHY72PJVvzhATki8tnb3UbUDrhAnIz9zrCtd4wWzA5JdDYEiHwZtI4qus4QPyEIXYQbEGtdEjbLIOPP9IKASW5pMQcWEHA074dqtEKTvAMQmbhS3-p6RNM-uPWJI2OhxMR4MlutZvUIBYintsQyYMlTbTdvQ8Vh-XJj49kZu0o8AvBIq_sg",
     "fcmToken": "fmVsAx99QKWDvmlTrH1wyb:APA91bFRf7wiJnxUC7CsNzebW_jopbo_yZcaYziX_aGmA1gmcztHChs1uFEZ5RYpi273JWd67h6y0usrlw47WJl8NLl3ula_yhfuKdSADfnrh_zdgipnNES7UjQ2a4CLSVHKdTNE3eJk",
     "email": "only.hyeok@gmail.com",
     "phoneNumber": "",
     "profileImages": [
-        "61fa791240ef1d6030c0a98c"
+        "61fa7cbafa2df68d5ac5c7c2"
     ],
-    "nickName": "흙은흙흙하고울지영",
     "name": "Min-hyeok Yun",
-    "birthAge": 1989,
-    "gender": "m",
-    "residence": null,
     "interests": [
         "61ac9d0beac3ebfb7ac9f955",
         "6174da70a60639819c3e6ad9",
         "61ac9d25eac3ebfb7ac9f95b"
     ],
-    "divingLog": null,
     "freeDivingBests": [],
+    "instructorLicenseImages": [],
+    "instructorTypes": [],
+    "instructorVerifications": [],
+    "createdAt": "2021-12-27T16:05:15.806Z",
+    "updatedAt": "2022-02-02T12:44:43.914Z",
+    "__v": 6,
+    "views": 9,
+    "birthAge": 1989,
+    "gender": "m",
+    "nickName": "흙은흙흙하고울지영",
+    "oauthToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhYTE0OGNkMDcyOGUzMDNkMzI2ZGU1NjBhMzVmYjFiYTMyYTUxNDkiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTWluLWh5ZW9rIFl1biIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQVRYQUp5VHhsZzIwZkh6aTJpdXVNYi1XdFRrM2J4UU03U1FrQTRtMGh4dT1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93ZWRpdmUtcHJkIiwiYXVkIjoid2VkaXZlLXByZCIsImF1dGhfdGltZSI6MTY0MDA5MTg4NywidXNlcl9pZCI6InRlUVRuallpUXJSajhqVGNMdUhXRk9MQXRhODIiLCJzdWIiOiJ0ZVFUbmpZaVFyUmo4alRjTHVIV0ZPTEF0YTgyIiwiaWF0IjoxNjQyOTIzNjA0LCJleHAiOjE2NDI5MjcyMDQsImVtYWlsIjoib25seS5oeWVva0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNDgzMTQ4ODkwMDQ5ODkzMTk1NiJdLCJlbWFpbCI6WyJvbmx5Lmh5ZW9rQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.TPXNXI_wBhtVh_BkCxKNXSe4PvDtgx_2xBc6N7fR0mG64ulPfv1n4QiRaXJGe5Ii8fSaU0ck2WDwI054UPvXZyJLPSV74rwfAWKinTXC_Cf4g6EePaElEb-MYQIrCP7z_JLWeWZHJeNpWWVM5EaBz-dEyGUZEnXUWVxhHY72PJVvzhATki8tnb3UbUDrhAnIz9zrCtd4wWzA5JdDYEiHwZtI4qus4QPyEIXYQbEGtdEjbLIOPP9IKASW5pMQcWEHA074dqtEKTvAMQmbhS3-p6RNM-uPWJI2OhxMR4MlutZvUIBYintsQyYMlTbTdvQ8Vh-XJj49kZu0o8AvBIq_sg",
+    "divingLog": null,
     "freeLicenseLevel": null,
     "freeLicenseType": null,
+    "residence": null,
     "scubaLicenseLevel": null,
-    "scubaLicenseType": null
-}
+    "scubaLicenseType": null,
+    "divingHostCount": 0,
+    "divingParticipantCount": 0
 }

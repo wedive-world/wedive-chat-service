@@ -168,15 +168,6 @@ async function postMessage(senderUserId, roomId, text, /* attachment */) {
     )
     // console.log(`chat-message-resolver | userInfo=${JSON.stringify(userInfo.user.name)}`)
 
-    let avatarInfo = await rocketChatClient.get(
-        '/api/v1/users.getAvatar',
-        userHeader,
-        {
-            username: senderUserId
-        }
-    )
-    // console.log(`chat-message-resolver | avatarInfo=${JSON.stringify(avatarInfo)}`)
-
     let roomInfo = await rocketChatClient.get(
         '/api/v1/rooms.info',
         userHeader,
@@ -188,7 +179,7 @@ async function postMessage(senderUserId, roomId, text, /* attachment */) {
 
     let chatMessage = convertChatMessage(result.message)
     chatMessage.authorName = userInfo.user.name
-    chatMessage.avatar = avatarInfo
+    chatMessage.avatar = `https://admin.wedives.com/chat/api/v1/users.getAvatar?username=${senderUserId}`
     let tokenList = await apiClient.getFcmTokenList(
         roomInfo.room.usernames
             .filter(username => username != senderUserId)
