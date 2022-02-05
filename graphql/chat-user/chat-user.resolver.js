@@ -1,6 +1,9 @@
 const RocketChatClient = require("../client/rocketchat-client")
 const client = new RocketChatClient()
 
+const ApiClient = require("../client/api-client")
+const apiClient = new ApiClient()
+
 module.exports = {
     ChatRoom: {
         async chatUsers(parent, args, context, info) {
@@ -29,7 +32,7 @@ module.exports = {
 
     ChatUser: {
         async avatarOrigin(parent, args, context, info) {
-            return `https://admin.wedives.com/chat/api/v1/users.getAvatar?username=${parent.uid}`
+            return await apiClient.getUserProfileImage(parent.uid)
         },
     },
 
