@@ -40,6 +40,20 @@ module.exports = {
             return messages.slice(args.skip, args.skip + args.limit)
                 .reverse()
         },
+        async getChannelHistories(parent, args, context, info) {
+
+            var date = new Date();
+            date.setDate(date.getDate() - 30);
+
+            console.log(`query | getChannelHistories: args=${JSON.stringify(args)}, context=${JSON.stringify(context)}, date=${date.toISOString()}`)
+
+            let messages = await getChannelHistories(context.uid, args.roomId, args.skip, args.limit)
+            if (!messages) {
+                return null
+            }
+
+            return messages
+        },
     },
 
     Mutation: {
@@ -210,17 +224,59 @@ async function syncMessage(uid, roomId, updatedSince) {
         .updated.map(rocketChatMessage => convertChatMessage(rocketChatMessage))
 }
 
+async function getChannelHistories(uid, roomId, skip, limit) {
+
+    let result = await rocketChatClient.get(
+        '/api/v1/channels.history',
+        await rocketChatClient.generateUserHeader(uid),
+        {
+            roomId: roomId,
+            offset: skip,
+            count: limit
+        }
+    )
+
+    if (!result.success) {
+        console.log(`chat-message-resolver | getChannelHistories: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return result.messages.map(rocketChatMessage => convertChatMessage(rocketChatMessage))
+}
+
 function convertChatMessage(rocketChatMessage) {
     if (!rocketChatMessage) {
         return
     }
 
+    if (rocketChatMessage.t) {
+        console.log(`MESSAGE: ${JSON.stringify(rocketChatMessage)}`)
+    }
+
+    const isAnnouncement = rocketChatMessage.t
+
     return {
         _id: rocketChatMessage._id,
+        type: isAnnouncement ? convertAnnounceType(rocketChatMessage.t) : 'message',
         author: rocketChatMessage.u.username,
         chatRoom: rocketChatMessage.rid,
         text: rocketChatMessage.msg,
         createdAt: rocketChatMessage.ts,
         updatedAt: rocketChatMessage._updatedAt
+    }
+}
+
+function convertAnnounceType(rocketChatType) {
+    switch (rocketChatType) {
+        case 'room_changed_description':
+            return 'roomTitleChanged'
+        case 'ru':
+            return 'userKicked'
+        case 'au':
+            return 'userInvited'
+        case 'ul':
+            return 'userLeaved'
+        case 'room_desription_changed':
+            return ''
     }
 }

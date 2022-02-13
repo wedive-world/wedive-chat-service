@@ -35,6 +35,16 @@ module.exports = {
         async author(parent, args, context, info) {
             return await getChatUserByUserName(parent.author)
         },
+
+        async text(parent, args, context, info) {
+            if (parent.type == 'userInvited'
+                || parent.type == 'userKicked') {
+                let user = await getChatUserByUserName(parent.text)
+                return user.name
+            }
+
+            return parent.text
+        }
     },
 
     ChatUser: {
@@ -97,7 +107,7 @@ async function findUserByNickName(nickName) {
     }
 
     return result.items
-    .map(item => convertUser(item))
+        .map(item => convertUser(item))
 }
 
 async function getChatUserByUserName(userName) {

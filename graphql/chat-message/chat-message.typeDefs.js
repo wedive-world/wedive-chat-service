@@ -5,6 +5,7 @@ module.exports = gql`
 type Query {
     getMessagesByRoomIdSinceUpdated(roomId: String!, updatedSince: Date): [ChatMessage]
     getMessagesByRoomId(roomId: String!, skip: Int = 0, limit: Int = 30): [ChatMessage]
+    getChannelHistories(roomId: String!, skip: Int = 0, limit: Int = 30): [ChatMessage]
 }
 
 type Mutation {
@@ -53,6 +54,7 @@ type ChatMessage {
     _id: String
     text: String
     author: ChatUser
+    type: ChatMessageType
     attachments: [Attachment]
     createdAt: Date
     updatedAt: Date
@@ -65,6 +67,15 @@ subscription ChatMessage {
     hasAttachments: boolean
     createdAt: Date
     updatedAt: Date
+}
+
+enum ChatMessageType {
+    message
+    roomTitleChanged
+    userJoined
+    userInvited
+    userLeaved
+    userKicked
 }
 
 input ChatMessageInput {

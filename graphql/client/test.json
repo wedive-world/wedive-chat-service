@@ -1,0 +1,125 @@
+{
+    "message": {
+        "msg": "result",
+        "id": "14",
+        "result": {
+            "messages": [
+                {
+                    "_id": "yqsjbg6a9w8tqT9Aa",
+                    "t": "ul",
+                    "rid": "GENERAL",
+                    "ts": {
+                        "$date": 1644725132242
+                    },
+                    "msg": "teQTnjYiQrRj8jTcLuHWFOLAta82",
+                    "u": {
+                        "_id": "wLbB42HJpvLvGXL3B",
+                        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
+                    },
+                    "groupable": false,
+                    "unread": true,
+                    "_updatedAt": {
+                        "$date": 1644725132242
+                    }
+                },
+                {
+                    "_id": "2vj82tweEjDaZAk4p",
+                    "t": "au",
+                    "rid": "GENERAL",
+                    "ts": {
+                        "$date": 1644724786716
+                    },
+                    "msg": "teQTnjYiQrRj8jTcLuHWFOLAta82",
+                    "u": {
+                        "_id": "jdvB4EWHjjvAurA8C",
+                        "username": "root"
+                    },
+                    "groupable": false,
+                    "unread": true,
+                    "_updatedAt": {
+                        "$date": 1644724786735
+                    }
+                },
+                {
+                    "_id": "fLjmzJpySWMhACkDr",
+                    "rid": "GENERAL",
+                    "msg": "ㅎㅇ",
+                    "ts": {
+                        "$date": 1639911264074
+                    },
+                    "u": {
+                        "_id": "jdvB4EWHjjvAurA8C",
+                        "username": "root",
+                        "name": "root"
+                    },
+                    "urls": [],
+                    "mentions": [],
+                    "channels": [],
+                    "md": [
+                        {
+                            "type": "PARAGRAPH",
+                            "value": [
+                                {
+                                    "type": "PLAIN_TEXT",
+                                    "value": "ㅎㅇ"
+                                }
+                            ]
+                        }
+                    ],
+                    "_updatedAt": {
+                        "$date": 1639911264100
+                    }
+                },
+                {
+                    "_id": "3RWZrQmehz8ZnyNMC",
+                    "rid": "GENERAL",
+                    "msg": "하이",
+                    "ts": {
+                        "$date": 1639908820331
+                    },
+                    "u": {
+                        "_id": "jdvB4EWHjjvAurA8C",
+                        "username": "root",
+                        "name": "root"
+                    },
+                    "urls": [],
+                    "mentions": [],
+                    "channels": [],
+                    "md": [
+                        {
+                            "type": "PARAGRAPH",
+                            "value": [
+                                {
+                                    "type": "PLAIN_TEXT",
+                                    "value": "하이"
+                                }
+                            ]
+                        }
+                    ],
+                    "_updatedAt": {
+                        "$date": 1639908820369
+                    }
+                },
+                {
+                    "_id": "dCYYWzQNB9e22voyj",
+                    "t": "uj",
+                    "rid": "GENERAL",
+                    "ts": {
+                        "$date": 1639657499974
+                    },
+                    "msg": "root",
+                    "u": {
+                        "_id": "jdvB4EWHjjvAurA8C",
+                        "username": "root"
+                    },
+                    "groupable": false,
+                    "_updatedAt": {
+                        "$date": 1639657499974
+                    }
+                }
+            ],
+            "unreadNotLoaded": 0
+        }
+    },
+    "success": true
+}
