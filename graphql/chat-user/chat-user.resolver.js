@@ -45,11 +45,13 @@ module.exports = {
 
     Query: {
         async getChatUserByUsername(parent, args, context, info) {
-
-            console.log(`query | getChatUserByUsername: context=${JSON.stringify(context)}`)
+            console.log(`query | findUserByNickName: context=${JSON.stringify(context)}`)
             return await getChatUserByUserName(args.username)
         },
-
+        async findUserByNickName(parent, args, context, info) {
+            console.log(`query | getChatUserByUsername: context=${JSON.stringify(context)}`)
+            return await findUserByNickName(args.nickName)
+        },
     },
 
     Mutation: {
@@ -76,6 +78,27 @@ module.exports = {
         },
     },
 };
+
+async function findUserByNickName(nickName) {
+    let queryParams = {
+        selector: JSON.stringify({
+            term: nickName
+        })
+    }
+
+    let result = await client.get(
+        '/api/v1/users.autocomplete',
+        client.getAixosAdminHeader(),
+        queryParams
+    )
+    if (!result.success || !result.items) {
+        console.log(`chat-user-service | findUserByNickName: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return result.items
+    .map(item => convertUser(item))
+}
 
 async function getChatUserByUserName(userName) {
 
