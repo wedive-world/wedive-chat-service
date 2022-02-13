@@ -31,10 +31,13 @@ class ApiClient {
         }
 
         try {
-            console.log(`ApiClient | getUserProfileImage: variable=${JSON.stringify(variable)}`)
+            // console.log(`ApiClient | getUserProfileImage: variable=${JSON.stringify(variable)}`)
             const data = await this.client.query({ query: query, variables: variable })
-            console.log(`ApiClient | getUserProfileImage: data=${JSON.stringify(data)}`)
+            // console.log(`ApiClient | getUserProfileImage: data=${JSON.stringify(data)}`)
 
+            if (data == null || data.data == null || data.data.getUserByUid == null) {
+                return null
+            }
             const profileImages = data.data.getUserByUid.profileImages
             if (profileImages && profileImages.length > 0) {
                 return profileImages[0].thumbnailUrl
