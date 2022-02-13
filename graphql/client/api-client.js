@@ -11,6 +11,38 @@ class ApiClient {
         return ApiClient.instance
     }
 
+    async getUserProfileImage(uid) {
+
+        const query = gql`
+            query GetUserByUid($uid: ID!) {
+                getUserByUid(uid: $uid) {
+                    profileImages {
+                        thumbnailUrl
+                    }
+                }
+            }
+        `
+
+        const variable = {
+            uid: uid
+        }
+
+        try {
+            console.log(`ApiClient | getUserProfileImage: variable=${JSON.stringify(variable)}`)
+            const data = await this.client.request(query, variable)
+            console.log(`ApiClient | getUserProfileImage: data=${JSON.stringify(data)}`)
+
+            if (data.getUserByUid.profileImages && data.getUserByUid.profileImages.length > 0) {
+                return data.getUserByUid.profileImages[0].thumbnailUrl
+            }
+            
+        } catch (err) {
+            console.log(`ApiClient | getUserProfileImage: ERROR, ${err}`)
+        }
+
+        return null
+    }
+
     async getFcmTokenList(uidList) {
 
         const query = gql`
