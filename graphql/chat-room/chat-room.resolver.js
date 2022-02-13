@@ -104,12 +104,12 @@ async function getChatRoom(uid, roomId) {
 
 async function getChannelInfo(uid, roomId) {
 
-    let userHeader = await client.generateUserHeader(uid)
-    let queryParams = {
-        roomId: roomId
-    }
+    let result = await client.get(
+        '/api/v1/channels.info',
+        await client.generateUserHeader(uid),
+        { roomId: roomId }
+    )
 
-    let result = await client.get('/api/v1/channels.info', userHeader, queryParams)
     if (!result.success) {
         console.log(`chat-room-resolver | getChatRoom: failed, result=${JSON.stringify(result)}`)
         return null
@@ -118,13 +118,11 @@ async function getChannelInfo(uid, roomId) {
     return convertChatRoom(result.channel)
 }
 
-async function leaveRoom(userId, roomId) {
-
-    let userHeader = await client.generateUserHeader(userId)
+async function leaveRoom(uid, roomId) {
 
     let result = await client.post(
         '/api/v1/channels.leave',
-        userHeader,
+        await client.generateUserHeader(uid),
         { roomId: roomId }
     )
 
@@ -142,11 +140,9 @@ async function leaveRoom(userId, roomId) {
 
 async function markRead(uid, roomId) {
 
-    let userHeader = await client.generateUserHeader(uid)
-
     let result = await client.post(
         '/api/v1/subscriptions.read',
-        userHeader,
+        await client.generateUserHeader(uid),
         { rid: roomId }
     )
 
