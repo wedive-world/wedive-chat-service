@@ -5,6 +5,7 @@ const {
   AuthenticationError,
   ForbiddenError,
 } = require('apollo-server-express');
+const { ApolloServerPluginCacheControl } = require('apollo-server-core')
 
 const { execute, subscribe } = require('graphql')
 
@@ -120,7 +121,8 @@ async function startServer() {
             }
           }
         }
-      }
+      },
+      ApolloServerPluginCacheControl({ defaultMaxAge: 5 }),  //60 seconds
     ],
   });
 
