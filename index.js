@@ -75,7 +75,7 @@ async function startServer() {
         webSocket.sessionId = sessionId;
 
         return {
-          uid: uid ? uid : 'teQTnjYiQrRj8jTcLuHWFOLAta82',
+          uid: uid ? uid : 'RuOiMt9YUTbRUJQTrXv4cWMEimr2',
           idToken: connectionParams.idtoken,
           sessionId: sessionId
         }
