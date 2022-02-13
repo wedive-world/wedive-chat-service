@@ -5,15 +5,22 @@ module.exports = {
     ChatRoom: {
         async chatUsers(parent, args, context, info) {
 
-            let chatUsers = []
-            if (parent.userIds && parent.userIds.length > 0) {
-                for (userId of parent.userIds) {
-                    let chatUser = await getChatUserByUserId(userId)
-                    chatUsers.push(chatUser)
-                }
-            }
+            console.log(`ChatRoom#chatUsers: parent=${JSON.stringify(parent)}`)
 
-            return chatUsers
+            if (parent.type == 'direct') {
+
+                let chatUsers = []
+                if (parent.userIds && parent.userIds.length > 0) {
+                    for (userId of parent.userIds) {
+                        let chatUser = await getChatUserByUserId(userId)
+                        chatUsers.push(chatUser)
+                    }
+                }
+
+                return chatUsers
+            } else {
+                return await getChannelMemberList(context.uid, parent._id)
+            }
         },
 
         async owner(parent, args, context, info) {
@@ -97,39 +104,20 @@ async function getChatUserByUserId(userId) {
     return convertUser(result.user)
 }
 
-async function getAvatarByUserName(username) {
-
-    let queryParams = {
-        username: username
-    }
-
-    let result = await client.get('/api/v1/users.getAvatar', client.getAixosAdminHeader(), queryParams)
-    if (!result) {
-        console.log(`chat-user-service | getAvatarByUserId: failed, result=${JSON.stringify(result)}`)
-        return null
-    }
-
-    return result
-}
-
 async function getChannelMemberList(uid, roomId) {
 
-    let result = await client.get(
-        '/api/v1/channels.members',
-        await client.generateUserHeader(uid),
-        {
-            roomId: roomId
-        }
-    )
+    let queryParams = {
+        roomId: roomId
+    }
 
-    if (!result.success) {
+    let result = await client.get('/api/v1/channels.members', client.getAixosAdminHeader(), queryParams)
+    if (!result.success || !result.members) {
         console.log(`chat-user-service | getChannelMemberList: failed, result=${JSON.stringify(result)}`)
         return null
     }
 
-    let userList = result.members.map(user => convertUser(user))
-    console.log(`chat-user-resolver | getChannelMemberList: userList=${JSON.stringify(userList)}`)
-    return userList
+    return result.members
+        .map(member => convertUser(member))
 }
 
 async function createUser(uid, email, name) {
