@@ -1,5 +1,6 @@
 const RocketChatClient = require("../client/rocketchat-client")
 const client = new RocketChatClient()
+const { randomUUID } = require('crypto')
 
 const { PubSub } = require("apollo-server");
 
@@ -40,13 +41,17 @@ module.exports = {
         },
 
         async createRoom(parent, args, context, info) {
-            let membersUids = args.membersUids ? args.membersUids : []
-            membersUids.push(context.uid)
-            return await createRoom(args.name, args.description, membersUids)
+            return await createRoom(context.uid, args.title, args.membersUids)
         },
+
+        async setRoomTitle(parent, args, context, info) {
+            return await setDescription(context.uid, args.roomId, args.title)
+        },
+
         async invite(parent, args, context, info) {
             return await invite(context.uid, args.roomId, args.userId)
         },
+
         async kick(parent, args, context, info) {
             return await kick(context.uid, args.roomId, args.uid)
         },
@@ -156,7 +161,7 @@ async function markRead(uid, roomId) {
         success: true
     }
 }
-async function createRoom(roomName, description, membersUids) {
+async function createRoom(uid, title, membersUids) {
 
     let userHeader = await client.generateUserHeader(uid)
 
@@ -164,7 +169,7 @@ async function createRoom(roomName, description, membersUids) {
         '/api/v1/channels.create',
         userHeader,
         {
-            name: roomName,
+            name: randomUUID(),
             members: membersUids
         }
     )
@@ -174,20 +179,38 @@ async function createRoom(roomName, description, membersUids) {
         return null
     }
 
-    let descriptionResult = await client.post(
-        '/api/v1/channels.setDescription',
-        userHeader,
-        {
-            roomId: result.channel._id,
-            description: description
-        }
-    )
+    let descriptionResult = await setDescription(uid, result.channel._id, title)
 
     if (!descriptionResult.success) {
         console.log(`chat-room-resolver | setDescription: failed, result=${JSON.stringify(descriptionResult)}`)
     }
 
-    return convertChatRoom(result.channel)
+    return await getChannelInfo(uid, result.channel._id)
+}
+
+async function setDescription(uid, roomId, title) {
+
+    let userHeader = await client.generateUserHeader(uid)
+
+    let descriptionResult = await client.post(
+        '/api/v1/channels.setDescription',
+        userHeader,
+        {
+            roomId: roomId,
+            description: title
+        }
+    )
+
+    if (!descriptionResult.success) {
+        console.log(`chat-room-resolver | setDescription: failed, result=${JSON.stringify(descriptionResult)}`)
+        return {
+            success: false
+        }
+    }
+
+    return {
+        success: true
+    }
 }
 
 async function invite(uid, roomId, userId) {
@@ -241,7 +264,7 @@ function convertChatRoom(rocketChatRoom) {
     return {
         _id: rocketChatRoom._id,
         type: convertRoomType(rocketChatRoom.t),
-        name: rocketChatRoom.description,
+        title: rocketChatRoom.description,
 
         ownerUserId: rocketChatRoom.u ? rocketChatRoom.u.username : "",
         userIds: rocketChatRoom.usernames,

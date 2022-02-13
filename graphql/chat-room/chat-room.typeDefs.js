@@ -9,7 +9,8 @@ type Query {
 type Mutation {
     markRead(roomId: String!): Response!
     leaveRoom(roomId: String!): Response!
-    createRoom(name: String!, description: String!, membersUids: [String]): ChatRoom
+    createRoom(title: String!, membersUids: [String]): ChatRoom
+    setRoomTitle(roomId:String!, title: String!): Response!
     invite(roomId: String!, userId: String!): Response!
     kick(roomId: String!, userId: String!): Response!
 }
@@ -43,9 +44,8 @@ type Mutation {
 # }
 type ChatRoom {
     _id: String
-
+    title: String
     type: ChatRoomType
-    name: String
 
     lastMessageAt: String
     numOfmessages: Int
