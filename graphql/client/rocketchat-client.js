@@ -1,5 +1,7 @@
 const { randomUUID } = require('crypto')
 const WebSocket = require('ws')
+const axios = require('axios')
+const { cacheAdapterEnhancer } = require('axios-extensions')
 
 class RocketChatClient {
     constructor() {
@@ -11,8 +13,9 @@ class RocketChatClient {
             "Content-Type": "application/json",
         }
 
-        this._curly = require('node-libcurl').curly
-        this._axios = require('axios').default
+        this._axios = axios.create({
+            adapter: cacheAdapterEnhancer(axios.defaults.adapter)
+        })
 
         var LRU = require("lru-cache")
 
@@ -190,7 +193,7 @@ class RocketChatClient {
                     "id": subSession,
                     "name": "stream-room-messages",
                     "params": roomIds
-                    
+
                 }))
                 return
             }
