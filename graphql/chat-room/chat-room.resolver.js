@@ -45,7 +45,7 @@ module.exports = {
             return await createRoom(args.name, args.description, membersUids)
         },
         async invite(parent, args, context, info) {
-            return await invite(context.uid, args.roomId, args.uid)
+            return await invite(context.uid, args.roomId, args.userId)
         },
         async kick(parent, args, context, info) {
             return await kick(context.uid, args.roomId, args.uid)

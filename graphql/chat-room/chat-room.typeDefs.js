@@ -10,8 +10,8 @@ type Mutation {
     markRead(roomId: String!): Response!
     leaveRoom(roomId: String!): Response!
     createRoom(name: String!, description: String!, membersUids: [String]): ChatRoom
-    invite(roomId: String!, uid: String!): Response!
-    kick(roomId: String!, uid: String!): Response!
+    invite(roomId: String!, userId: String!): Response!
+    kick(roomId: String!, userId: String!): Response!
 }
 
 # {
