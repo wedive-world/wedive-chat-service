@@ -52,7 +52,7 @@ module.exports = {
                 return null
             }
 
-            return messages
+            return messages.reverse()
         },
     },
 
