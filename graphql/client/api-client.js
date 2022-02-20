@@ -69,7 +69,7 @@ class ApiClient {
             const data = await this.client.query({ query: query, variables: variable })
             console.log(`ApiClient | getFcmTokenList: data=${JSON.stringify(data)}`)
 
-            return data.getUsersByUid.map(user => user.fcmToken)
+            return data.data.getUsersByUid.map(user => user.fcmToken)
 
         } catch (err) {
             console.log(`ApiClient | getFcmTokenList: ERROR, ${err}`)
