@@ -34,6 +34,12 @@ module.exports = {
             return await leaveRoom(context.uid, args.roomId)
         },
 
+        async deleteRoom(parent, args, context, info) {
+            console.log(`mutation | deleteRoom: args=${JSON.stringify(args)}`)
+            console.log(`mutation | deleteRoom: context=${JSON.stringify(context)}`)
+            return await deleteRoom(context.uid, args.roomId)
+        },
+
         async markRead(parent, args, context, info) {
             console.log(`mutation | markRead: args=${JSON.stringify(args)}`)
             console.log(`mutation | markRead: context=${JSON.stringify(context)}`)
@@ -122,6 +128,39 @@ async function leaveRoom(uid, roomId) {
 
     let result = await client.post(
         '/api/v1/channels.leave',
+        await client.generateUserHeader(uid),
+        { roomId: roomId }
+    )
+
+    if (!result.success) {
+        console.log(`chat-room-resolver | leaveRoom: failed, result=${JSON.stringify(result)}`)
+        return {
+            success: false
+        }
+    }
+
+    result = await client.post(
+        '/api/v1/channels.close',
+        await client.generateUserHeader(uid),
+        { roomId: roomId }
+    )
+
+    if (!result.success) {
+        console.log(`chat-room-resolver | leaveRoom: failed, result=${JSON.stringify(result)}`)
+        return {
+            success: false
+        }
+    }
+    
+    return {
+        success: true
+    }
+}
+
+async function deleteRoom(uid, roomId) {
+
+    let result = await client.post(
+        '/api/v1/channels.delete',
         await client.generateUserHeader(uid),
         { roomId: roomId }
     )

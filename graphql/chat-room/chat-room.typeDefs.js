@@ -9,6 +9,7 @@ type Query {
 type Mutation {
     markRead(roomId: String!): Response!
     leaveRoom(roomId: String!): Response!
+    deleteRoom(roomId: String!): Response!
     createRoom(title: String!, membersUids: [String]): ChatRoom
     setRoomTitle(roomId:String!, title: String!): Response!
     invite(roomId: String!, userId: String!): Response!

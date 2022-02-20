@@ -107,7 +107,7 @@ async function startServer() {
       let uid = await validateIdToken(req.headers);
 
       return {
-        uid: uid ? uid : 'teQTnjYiQrRj8jTcLuHWFOLAta82',
+        uid: uid ? uid : 'RuOiMt9YUTbRUJQTrXv4cWMEimr2',
         idToken: req.headers.idtoken
       }
     },
