@@ -100,14 +100,14 @@ async function startServer() {
     introspection: true,
 
     context: async ({ req }) => {
-      // if (req.headers.idtoken) {
-      //   throw new AuthenticationError("mssing idtoken");
-      // }
+      if (!req.headers.idtoken) {
+        throw new AuthenticationError("mssing idtoken");
+      }
 
       let uid = await validateIdToken(req.headers);
 
       return {
-        uid: uid ? uid : 'RuOiMt9YUTbRUJQTrXv4cWMEimr2',
+        uid: uid,
         idToken: req.headers.idtoken
       }
     },
