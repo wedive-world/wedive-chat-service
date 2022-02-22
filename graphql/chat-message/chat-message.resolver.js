@@ -42,17 +42,28 @@ module.exports = {
         },
         async getChannelHistories(parent, args, context, info) {
 
-            var date = new Date();
-            date.setDate(date.getDate() - 30);
+            console.log(`query | getChannelHistories: args=${JSON.stringify(args)}, context=${JSON.stringify(context)}`)
 
-            console.log(`query | getChannelHistories: args=${JSON.stringify(args)}, context=${JSON.stringify(context)}, date=${date.toISOString()}`)
+            const roomType = await getChatRoomType(context.uid, args.roomId)
+            if (roomType == 'c') {
+                let messages = await getChannelHistories(context.uid, args.roomId, args.skip, args.limit)
+                if (!messages) {
+                    return null
+                }
 
-            let messages = await getChannelHistories(context.uid, args.roomId, args.skip, args.limit)
-            if (!messages) {
-                return null
+                return messages.reverse()
+            } else {
+                var date = new Date();
+                date.setDate(date.getDate() - 30);
+
+                let messages = await syncMessage(context.uid, args.roomId, date.toISOString())
+                if (!messages) {
+                    return null
+                }
+
+                return messages.slice(args.skip, args.skip + args.limit)
+                    .reverse()
             }
-
-            return messages.reverse()
         },
     },
 
@@ -279,4 +290,20 @@ function convertAnnounceType(rocketChatType) {
         case 'room_desription_changed':
             return ''
     }
+}
+
+async function getChatRoomType(uid, roomId) {
+
+    let userHeader = await client.generateUserHeader(uid)
+    let queryParams = {
+        roomId: roomId
+    }
+
+    let result = await client.get('/api/v1/rooms.info', userHeader, queryParams)
+    if (!result.success) {
+        console.log(`chat-room-resolver | getChatRoom: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return result.room.t
 }
