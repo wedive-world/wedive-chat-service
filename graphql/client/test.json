@@ -1,125 +1,40 @@
 {
-    "message": {
-        "msg": "result",
-        "id": "14",
-        "result": {
-            "messages": [
+    "errors": [
+        {
+            "message": "data must only contain string values",
+            "locations": [
                 {
-                    "_id": "yqsjbg6a9w8tqT9Aa",
-                    "t": "ul",
-                    "rid": "GENERAL",
-                    "ts": {
-                        "$date": 1644725132242
-                    },
-                    "msg": "teQTnjYiQrRj8jTcLuHWFOLAta82",
-                    "u": {
-                        "_id": "wLbB42HJpvLvGXL3B",
-                        "username": "teQTnjYiQrRj8jTcLuHWFOLAta82"
-                    },
-                    "groupable": false,
-                    "unread": true,
-                    "_updatedAt": {
-                        "$date": 1644725132242
-                    }
-                },
-                {
-                    "_id": "2vj82tweEjDaZAk4p",
-                    "t": "au",
-                    "rid": "GENERAL",
-                    "ts": {
-                        "$date": 1644724786716
-                    },
-                    "msg": "teQTnjYiQrRj8jTcLuHWFOLAta82",
-                    "u": {
-                        "_id": "jdvB4EWHjjvAurA8C",
-                        "username": "root"
-                    },
-                    "groupable": false,
-                    "unread": true,
-                    "_updatedAt": {
-                        "$date": 1644724786735
-                    }
-                },
-                {
-                    "_id": "fLjmzJpySWMhACkDr",
-                    "rid": "GENERAL",
-                    "msg": "ㅎㅇ",
-                    "ts": {
-                        "$date": 1639911264074
-                    },
-                    "u": {
-                        "_id": "jdvB4EWHjjvAurA8C",
-                        "username": "root",
-                        "name": "root"
-                    },
-                    "urls": [],
-                    "mentions": [],
-                    "channels": [],
-                    "md": [
-                        {
-                            "type": "PARAGRAPH",
-                            "value": [
-                                {
-                                    "type": "PLAIN_TEXT",
-                                    "value": "ㅎㅇ"
-                                }
-                            ]
-                        }
-                    ],
-                    "_updatedAt": {
-                        "$date": 1639911264100
-                    }
-                },
-                {
-                    "_id": "3RWZrQmehz8ZnyNMC",
-                    "rid": "GENERAL",
-                    "msg": "하이",
-                    "ts": {
-                        "$date": 1639908820331
-                    },
-                    "u": {
-                        "_id": "jdvB4EWHjjvAurA8C",
-                        "username": "root",
-                        "name": "root"
-                    },
-                    "urls": [],
-                    "mentions": [],
-                    "channels": [],
-                    "md": [
-                        {
-                            "type": "PARAGRAPH",
-                            "value": [
-                                {
-                                    "type": "PLAIN_TEXT",
-                                    "value": "하이"
-                                }
-                            ]
-                        }
-                    ],
-                    "_updatedAt": {
-                        "$date": 1639908820369
-                    }
-                },
-                {
-                    "_id": "dCYYWzQNB9e22voyj",
-                    "t": "uj",
-                    "rid": "GENERAL",
-                    "ts": {
-                        "$date": 1639657499974
-                    },
-                    "msg": "root",
-                    "u": {
-                        "_id": "jdvB4EWHjjvAurA8C",
-                        "username": "root"
-                    },
-                    "groupable": false,
-                    "_updatedAt": {
-                        "$date": 1639657499974
-                    }
+                    "line": 3,
+                    "column": 21
                 }
             ],
-            "unreadNotLoaded": 0
+            "path": [
+                "joinDiving"
+            ],
+            "extensions": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "exception": {
+                    "errorInfo": {
+                        "code": "messaging/invalid-payload",
+                        "message": "data must only contain string values"
+                    },
+                    "codePrefix": "messaging",
+                    "stacktrace": [
+                        "Error: data must only contain string values",
+                        "    at FirebaseMessagingError.FirebaseError [as constructor] (/usr/src/wedive-api/node_modules/firebase-admin/lib/utils/error.js:44:28)",
+                        "    at FirebaseMessagingError.PrefixedFirebaseError [as constructor] (/usr/src/wedive-api/node_modules/firebase-admin/lib/utils/error.js:90:28)",
+                        "    at new FirebaseMessagingError (/usr/src/wedive-api/node_modules/firebase-admin/lib/utils/error.js:279:16)",
+                        "    at /usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging-internal.js:78:19",
+                        "    at Array.forEach (<anonymous>)",
+                        "    at validateStringMap (/usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging-internal.js:76:22)",
+                        "    at Object.validateMessage (/usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging-internal.js:55:5)",
+                        "    at /usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging.js:258:38",
+                        "    at Array.map (<anonymous>)",
+                        "    at /usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging.js:257:33"
+                    ]
+                }
+            }
         }
-    },
-    "success": true
+    ],
+    "data": null
 }

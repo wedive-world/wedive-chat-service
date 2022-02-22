@@ -294,12 +294,12 @@ function convertAnnounceType(rocketChatType) {
 
 async function getChatRoomType(uid, roomId) {
 
-    let userHeader = await client.generateUserHeader(uid)
+    let userHeader = await rocketChatClient.generateUserHeader(uid)
     let queryParams = {
         roomId: roomId
     }
 
-    let result = await client.get('/api/v1/rooms.info', userHeader, queryParams)
+    let result = await rocketChatClient.get('/api/v1/rooms.info', userHeader, queryParams)
     if (!result.success) {
         console.log(`chat-room-resolver | getChatRoom: failed, result=${JSON.stringify(result)}`)
         return null
