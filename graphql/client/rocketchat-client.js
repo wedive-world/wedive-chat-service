@@ -14,7 +14,7 @@ class RocketChatClient {
         }
 
         this._axios = axios.create({
-            adapter: cacheAdapterEnhancer(axios.defaults.adapter)
+            adapter: cacheAdapterEnhancer(axios.defaults.adapter, { enabledByDefault: false })
         })
 
         var LRU = require("lru-cache")
@@ -28,7 +28,7 @@ class RocketChatClient {
     }
 
     async _checkAndUpdateUserCache(uid) {
-        // if (!this._userIdCache.has(uid) || !this._userIdCache.has(uid)) {
+        if (!this._userIdCache.has(uid) || !this._userIdCache.has(uid)) {
             let result = await this.login(uid)
 
             if (result.data.userId && result.data.authToken) {
@@ -36,7 +36,7 @@ class RocketChatClient {
                 this._userIdCache.set(uid, result.data.userId)
                 this._userTokenCache.set(uid, result.data.authToken)
             }
-        // }
+        }
     }
 
     async _getUserToken(uid) {
