@@ -156,9 +156,9 @@ async function postDirectMessage(senderUserId, targetUserId, text, /* attachment
     return chatMessage
 }
 
-async function postMessage(senderUserId, roomId, text, /* attachment */) {
+async function postMessage(senderUid, roomId, text, /* attachment */) {
 
-    let userHeader = await rocketChatClient.generateUserHeader(senderUserId)
+    let userHeader = await rocketChatClient.generateUserHeader(senderUid)
 
     let result = await rocketChatClient.post(
         '/api/v1/chat.postMessage',
@@ -178,7 +178,7 @@ async function postMessage(senderUserId, roomId, text, /* attachment */) {
         '/api/v1/users.info',
         userHeader,
         {
-            username: senderUserId
+            username: senderUid
         }
     )
     // console.log(`chat-message-resolver | userInfo=${JSON.stringify(userInfo.user.name)}`)
@@ -194,13 +194,13 @@ async function postMessage(senderUserId, roomId, text, /* attachment */) {
 
     let chatMessage = convertChatMessage(result.message)
     chatMessage.authorName = userInfo.user.name
-    chatMessage.avatar = await apiClient.getUserProfileImage(serderUserId)
+    chatMessage.avatar = await apiClient.getUserProfileImage(senderUid)
 
     console.log(`chatMessage=${JSON.stringify(chatMessage)}`)
 
     let tokenList = await apiClient.getFcmTokenList(
         roomInfo.room.usernames
-            .filter(username => username != senderUserId)
+            .filter(username => username != senderUid)
     )
 
     if (tokenList && tokenList.length > 0) {
