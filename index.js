@@ -122,7 +122,7 @@ async function startServer() {
           }
         }
       },
-      ApolloServerPluginCacheControl({ defaultMaxAge: 5 }),  //60 seconds
+      // ApolloServerPluginCacheControl({ defaultMaxAge: 5 }),  //60 seconds
     ],
   });
 
