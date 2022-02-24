@@ -106,7 +106,7 @@ class RocketChatClient {
                     headers: header
                 })
 
-            console.log(`RocketChatClient | POST: url=${url} postData=${JSON.stringify(postData)} status=${status}`)// data=${JSON.stringify(data)}`)
+            // console.log(`RocketChatClient | POST: url=${url} postData=${JSON.stringify(postData)} status=${status}`)// data=${JSON.stringify(data)}`)
             return data
 
         } catch (err) {
@@ -119,14 +119,14 @@ class RocketChatClient {
 
         try {
             const url = `${this._getHost()}${method}?${require('querystring').stringify(queryParams)}`
-            console.log(`RocketChatClient | GET: url=${url}`)
+            // console.log(`RocketChatClient | GET: url=${url}`)
 
             const { status, statusText, data } = await this._axios.get(
                 url,
                 {
                     headers: header
                 })
-            console.log(`RocketChatClient | GET: method=${method} queryParams=${JSON.stringify(queryParams)} status=${status}`)// data=${JSON.stringify(data)}`)
+            // console.log(`RocketChatClient | GET: method=${method} queryParams=${JSON.stringify(queryParams)} status=${status}`)// data=${JSON.stringify(data)}`)
             return data
 
         } catch (err) {
@@ -140,14 +140,14 @@ class RocketChatClient {
 
         const loginSession = randomUUID()
         let userHeader = await this.generateUserHeader(uid)
-        console.log(`RocketChatClient | userHeader created!`)
+        // console.log(`RocketChatClient | userHeader created!`)
 
         const webSocket = new WebSocket(this._getWssHost())
 
-        console.log(`RocketChatClient | socket created!, url=${webSocket.url} connected=${webSocket.readyState}`)
+        // console.log(`RocketChatClient | socket created!, url=${webSocket.url} connected=${webSocket.readyState}`)
 
         webSocket.onopen = async function () {
-            console.log('RocketChatClient | socket opened!');
+            console.log('RocketChatClient | subscribe: socket opened!');
 
             webSocket.send(JSON.stringify({
                 "msg": "connect",
@@ -158,7 +158,7 @@ class RocketChatClient {
 
         webSocket.onmessage = async function (event) {
             let response = JSON.parse(event.data)
-            console.log(`RocketChatClient | onmessage: ${JSON.stringify(response)}`);
+            console.log(`RocketChatClient | subscribe: onmessage: ${JSON.stringify(response)}`);
 
             if (response.msg == 'ping') {
                 let rocketChatClient = new RocketChatClient()
