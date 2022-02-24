@@ -68,7 +68,7 @@ async function startServer() {
     {
       schema, execute, subscribe,
       async onConnect(connectionParams, webSocket, context) {
-        // console.log(`Connected! connectionParams=${JSON.stringify(connectionParams)}`)
+        console.log(`Connected! connectionParams=${JSON.stringify(connectionParams)}`)
         let uid = await validateIdToken(connectionParams);
         let sessionId = randomUUID()
 
@@ -104,7 +104,7 @@ async function startServer() {
         throw new AuthenticationError("mssing idtoken");
       }
 
-      let uid = await validateIdToken(req.headers.idToken);
+      let uid = await validateIdToken(req.headers);
 
       return {
         uid: uid,
@@ -143,7 +143,7 @@ async function validateIdToken(header) {
   let uid = null;
 
   if (header.idtoken) {
-    console.log(`index | context: header.idtoken=${header.idtoken}`);
+    // console.log(`index | context: header.idtoken=${header.idtoken}`);
     try {
       let decodedToken = await firebaseAuth.verifyIdToken(header.idtoken);
       uid = decodedToken.uid;
