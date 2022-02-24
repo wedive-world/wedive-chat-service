@@ -87,7 +87,7 @@ async function getJoinedRoomList(uid) {
         console.log(`chat-room-resolver | getJoinedRoomList: failed, result=${JSON.stringify(result)}`)
         return null
     }
-    console.log(`chat-room-resolver | getJoinedRoomList: result=${JSON.stringify(result)}`)
+    // console.log(`chat-room-resolver | getJoinedRoomList: result=${JSON.stringify(result)}`)
 
     let subscriptions = await client.get('/api/v1/subscriptions.get', userHeader)
     // console.log(`chat-room-resolver | getJoinedRoomList: subscriptions=${JSON.stringify(subscriptions)}`)

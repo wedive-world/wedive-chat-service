@@ -68,7 +68,7 @@ async function startServer() {
     {
       schema, execute, subscribe,
       async onConnect(connectionParams, webSocket, context) {
-        console.log(`onConnect: connectionParams=${JSON.stringify(connectionParams)}, context=${JSON.stringify(context)}`)
+        console.log(`onConnect: connectionParams=${JSON.stringify(connectionParams)}`)
         if (!connectionParams.idtoken && !connectionParams.uid) {
           throw new AuthenticationError("mssing idtoken");
         }
@@ -99,7 +99,7 @@ async function startServer() {
         rocketChatClient.expireSession(webSocket.sessionId)
       },
       onDisconnect(webSocket, context) {
-        console.log(`Disconnected! context=${JSON.stringify(context)}`)
+        console.log(`Disconnected!`)
         let rocketChatClient = new RocketChatClient()
         rocketChatClient.expireSession(webSocket.sessionId)
       },
@@ -160,7 +160,7 @@ async function validateIdToken(idtoken) {
   if (!idtoken) {
     return null
   }
-
+  console.log(`validateIdToken: ${idToken}`)
   try {
     let decodedToken = await firebaseAuth.verifyIdToken(idtoken);
     // console.log(`index | context: decode success, uid=${uid}`);
