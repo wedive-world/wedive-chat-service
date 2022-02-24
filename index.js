@@ -86,7 +86,7 @@ async function startServer() {
         rocketChatClient.expireSession(webSocket.sessionId)
       },
       onDisconnect(webSocket, context) {
-        console.log(`Disconnected! webSocket=${JSON.stringify(webSocket)}`)
+        console.log(`Disconnected! context=${JSON.stringify(context)}`)
         let rocketChatClient = new RocketChatClient()
         rocketChatClient.expireSession(webSocket.sessionId)
       },
@@ -104,7 +104,7 @@ async function startServer() {
         throw new AuthenticationError("mssing idtoken");
       }
 
-      let uid = await validateIdToken(req.headers);
+      let uid = await validateIdToken(req.headers.idToken);
 
       return {
         uid: uid,
