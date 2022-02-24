@@ -71,20 +71,20 @@ async function startServer() {
         if (!connectionParams.idtoken && !connectionParams.uid) {
           throw new AuthenticationError("mssing idtoken");
         }
-  
-        let uid = connectionParams.idtoken
-          ? await validateIdToken(connectionParams.idtoken)
-          : connectionParams.uid
-  
-        let user = await firebaseAuth.getUser(uid)
-        if (!user) {
-          throw new AuthenticationError("unknown uid: " + uid);
-        }
 
+        let uid = connectionParams.uid
+        if (uid) {
+          let user = await firebaseAuth.getUser(uid)
+          if (!user) {
+            throw new AuthenticationError("unknown uid: " + uid);
+          }
+        } else {
+          uid = await validateIdToken(connectionParams.idtoken)
+        }
         console.log(`Connected! connectionParams=${JSON.stringify(connectionParams)}`)
-        
+
         let sessionId = randomUUID()
-        webSocket.sessionId = sessionId;
+        webSocket.sessionId = sessionId
 
         return {
           uid: uid,
@@ -116,13 +116,14 @@ async function startServer() {
         throw new AuthenticationError("mssing idtoken");
       }
 
-      let uid = req.headers.idtoken
-        ? await validateIdToken(req.headers.idtoken)
-        : req.headers.uid
-
-      let user = await firebaseAuth.getUser(uid)
-      if (!user) {
-        throw new AuthenticationError("unknown uid: " + uid);
+      let uid = req.headers.uid
+      if (uid) {
+        let user = await firebaseAuth.getUser(uid)
+        if (!user) {
+          throw new AuthenticationError("unknown uid: " + uid);
+        }
+      } else {
+        uid = await validateIdToken(req.headers.idtoken)
       }
 
       return {
