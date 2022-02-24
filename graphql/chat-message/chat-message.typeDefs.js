@@ -101,4 +101,8 @@ input AttachmentInput {
 type ChatRoom {
     lastChatMessage: ChatMessage
 }
+
+type ChatRoomInfo {
+    chatMessages: [ChatMessage]
+}
 `;

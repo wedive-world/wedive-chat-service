@@ -4,6 +4,7 @@ module.exports = gql`
 
 type Query {
     getJoinedRoomList: [ChatRoom]
+    getChatRoomInfo(roomId: String!, skip: Int = 0, limit: Int = 30): ChatRoomInfo
 }
 
 type Mutation {
@@ -53,6 +54,13 @@ type ChatRoom {
     unread: Int
 
     createdAt: Date
+}
+
+type ChatRoomInfo {
+    roomId: ID
+    skip: Int
+    limit: Int
+    chatRoom: ChatRoom
 }
 
 enum ChatRoomType {

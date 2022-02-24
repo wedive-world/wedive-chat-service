@@ -13,8 +13,21 @@ module.exports = {
 
     ChatRoom: {
         async lastChatMessage(parent, args, context, info) {
-            console.log(`lastChatMessage: parent=${JSON.stringify(parent)}`)
+            // console.log(`lastChatMessage: parent=${JSON.stringify(parent)}`)
             return convertChatMessage(parent.lastChatMessage)
+        },
+    },
+
+    ChatRoomInfo: {
+        async chatMessages(parent, _, context, info) {
+            // console.log(`chatMessages: parent=${JSON.stringify(parent)}`)
+            let args = {
+                roomId: parent.roomId,
+                skip: parent.skip,
+                limit: parent.limit
+            }
+
+            return await module.exports.Query.getChannelHistories(null, args, context, null)
         },
     },
 

@@ -14,8 +14,14 @@ const roomTypeMap = {
 module.exports = {
     ChatMessage: {
         async chatRoom(parent, args, context, info) {
-            console.log(`chat-room-resolver | chatRoom: parent=${JSON.stringify(parent)}`)
+            console.log(`chat-room-resolver | ChatRoomInfo | chatRoom: parent=${JSON.stringify(parent)}`)
             return await getChatRoom(context.uid, parent.chatRoom)
+        }
+    },
+    ChatRoomInfo: {
+        async chatRoom(parent, args, context, info) {
+            console.log(`chat-room-resolver | ChatRoomInfo | chatRoom: parent=${JSON.stringify(parent)}`)
+            return await getChatRoom(context.uid, parent.roomId)
         }
     },
 
@@ -23,6 +29,14 @@ module.exports = {
         async getJoinedRoomList(parent, args, context, info) {
             console.log(`query | getJoinedRoomList: context=${JSON.stringify(context)}`)
             return await getJoinedRoomList(context.uid)
+        },
+        async getChatRoomInfo(parent, args, context, info) {
+            console.log(`query | getChatRoomInfo: context=${JSON.stringify(context)}`)
+            return {
+                roomId: args.roomId,
+                skip: args.skip,
+                limit: args.limit
+            }
         },
     },
 
