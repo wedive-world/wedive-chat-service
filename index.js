@@ -160,7 +160,7 @@ async function validateIdToken(idtoken) {
   if (!idtoken) {
     return null
   }
-  console.log(`validateIdToken: ${idToken}`)
+  console.log(`validateIdToken: ${idtoken}`)
   try {
     let decodedToken = await firebaseAuth.verifyIdToken(idtoken);
     // console.log(`index | context: decode success, uid=${uid}`);
