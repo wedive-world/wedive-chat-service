@@ -68,14 +68,26 @@ async function startServer() {
     {
       schema, execute, subscribe,
       async onConnect(connectionParams, webSocket, context) {
-        console.log(`Connected! connectionParams=${JSON.stringify(connectionParams)}`)
-        let uid = await validateIdToken(connectionParams);
-        let sessionId = randomUUID()
+        if (!connectionParams.idtoken && !connectionParams.uid) {
+          throw new AuthenticationError("mssing idtoken");
+        }
+  
+        let uid = connectionParams.idtoken
+          ? await validateIdToken(connectionParams.idtoken)
+          : connectionParams.uid
+  
+        let user = await firebaseAuth.getUser(uid)
+        if (!user) {
+          throw new AuthenticationError("unknown uid: " + uid);
+        }
 
+        console.log(`Connected! connectionParams=${JSON.stringify(connectionParams)}`)
+        
+        let sessionId = randomUUID()
         webSocket.sessionId = sessionId;
 
         return {
-          uid: uid ? uid : 'RuOiMt9YUTbRUJQTrXv4cWMEimr2',
+          uid: uid,
           idToken: connectionParams.idtoken,
           sessionId: sessionId
         }
@@ -100,11 +112,18 @@ async function startServer() {
     introspection: true,
 
     context: async ({ req }) => {
-      if (!req.headers.idtoken) {
+      if (!req.headers.idtoken && !req.headers.uid) {
         throw new AuthenticationError("mssing idtoken");
       }
 
-      let uid = await validateIdToken(req.headers);
+      let uid = req.headers.idtoken
+        ? await validateIdToken(req.headers.idtoken)
+        : req.headers.uid
+
+      let user = await firebaseAuth.getUser(uid)
+      if (!user) {
+        throw new AuthenticationError("unknown uid: " + uid);
+      }
 
       return {
         uid: uid,
@@ -135,24 +154,18 @@ async function startServer() {
   )
 }
 
-async function validateIdToken(header) {
-  if (!header) {
+async function validateIdToken(idtoken) {
+  if (!idtoken) {
     return null
   }
 
-  let uid = null;
+  try {
+    let decodedToken = await firebaseAuth.verifyIdToken(idtoken);
+    // console.log(`index | context: decode success, uid=${uid}`);
+    return decodedToken.uid;
 
-  if (header.idtoken) {
-    // console.log(`index | context: header.idtoken=${header.idtoken}`);
-    try {
-      let decodedToken = await firebaseAuth.verifyIdToken(header.idtoken);
-      uid = decodedToken.uid;
-      console.log(`index | context: decode success, uid=${uid}`);
-
-    } catch (err) {
-      console.log(`err!! + ${err}`);
-      throw new AuthenticationError(err);
-    }
+  } catch (err) {
+    console.log(`err!! + ${err}`);
+    throw new AuthenticationError(err);
   }
-  return uid;
 }
