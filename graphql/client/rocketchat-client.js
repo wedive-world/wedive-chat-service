@@ -215,8 +215,14 @@ class RocketChatClient {
             return
         }
 
+        console.log(`expireSession: ${sessionId}`)
         let socket = this.socketMap.get(sessionId)
         this.socketMap.delete(sessionId)
+
+        socket.send(JSON.stringify({
+            "msg": "nosub",
+            "id": sessionId
+        }))
 
         socket.close()
     }

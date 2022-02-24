@@ -68,6 +68,10 @@ async function startServer() {
     {
       schema, execute, subscribe,
       async onConnect(connectionParams, webSocket, context) {
+        if (Object.keys(connectionParams).length == 0) {
+          return
+        }
+
         console.log(`onConnect: connectionParams=${JSON.stringify(connectionParams)}`)
         if (!connectionParams.idtoken && !connectionParams.uid) {
           throw new AuthenticationError("mssing idtoken");
@@ -82,7 +86,7 @@ async function startServer() {
         } else {
           uid = await validateIdToken(connectionParams.idtoken)
         }
-        console.log(`Connected! connectionParams=${JSON.stringify(connectionParams)}`)
+        console.log(`Connected! readyState=${webSocket.readyState} connectionParams=${JSON.stringify(connectionParams)}`)
 
         let sessionId = randomUUID()
         webSocket.sessionId = sessionId
@@ -97,11 +101,17 @@ async function startServer() {
         console.log(`onOperationComplete! webSocket=${JSON.stringify(webSocket.sessionId)}`)
         let rocketChatClient = new RocketChatClient()
         rocketChatClient.expireSession(webSocket.sessionId)
+        webSocket.close()
       },
       onDisconnect(webSocket, context) {
-        console.log(`Disconnected!`)
+        if (!webSocket.sessionId) {
+          return
+        }
+
+        console.log(`Disconnected! ${webSocket.sessionId}`)
         let rocketChatClient = new RocketChatClient()
         rocketChatClient.expireSession(webSocket.sessionId)
+        webSocket.close()
       },
     },
     { server: httpServer, path: '/graphql' }
