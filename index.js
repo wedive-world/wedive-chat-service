@@ -68,6 +68,7 @@ async function startServer() {
     {
       schema, execute, subscribe,
       async onConnect(connectionParams, webSocket, context) {
+        console.log(`onConnect: connectionParams=${JSON.stringify(connectionParams)}, context=${JSON.stringify(context)}`)
         if (!connectionParams.idtoken && !connectionParams.uid) {
           throw new AuthenticationError("mssing idtoken");
         }
