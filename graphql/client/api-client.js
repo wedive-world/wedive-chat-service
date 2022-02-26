@@ -79,8 +79,16 @@ class ApiClient {
             query GetDivingByChatRoomId($chatRoomId: String!) {
                 getDivingByChatRoomId(chatRoomId: $chatRoomId) {
                     _id
-                    title
                     startedAt
+                    diveCenters {
+                        name
+                    }
+                    divePoints {
+                        name
+                    }
+                    diveSites {
+                        name
+                    }
                 }
             }
         `

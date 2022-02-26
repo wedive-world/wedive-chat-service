@@ -44,6 +44,15 @@ module.exports = {
                 const diffInTime = startedAt.getTime() - today.getTime();
 
                 divingInfo.daysLeft = Math.round(diffInTime / oneDay);
+
+                if (divingInfo.diveSites) {
+                    divingInfo.name = divingInfoSites[0].name
+                } else if (divingInfo.divePoints) {
+                    divingInfo.name = divePoints[0].name
+                } else if (divingInfo.diveCenters) {
+                    divingInfo.name = diveCenters[0].name
+                }
+
                 return divingInfo
             }
         },
