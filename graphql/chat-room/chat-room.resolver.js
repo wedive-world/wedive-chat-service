@@ -1,5 +1,8 @@
 const RocketChatClient = require("../client/rocketchat-client")
-const client = new RocketChatClient()
+const rocketChatClient = new RocketChatClient()
+
+const ApiClient = require("../client/api-client")
+const apiClient = new ApiClient()
 const { randomUUID } = require('crypto')
 
 const { PubSub } = require("apollo-server");
@@ -18,11 +21,32 @@ module.exports = {
             return await getChatRoom(context.uid, parent.chatRoom)
         }
     },
+
     ChatRoomInfo: {
         async chatRoom(parent, args, context, info) {
             console.log(`chat-room-resolver | ChatRoomInfo | chatRoom: parent=${JSON.stringify(parent)}`)
             return await getChatRoom(context.uid, parent.roomId)
         }
+    },
+
+    ChatRoom: {
+        async divingInfo(parent, args, context, info) {
+            if (parent.type == 'channel') {
+                let divingInfo = await apiClient.getDivingInfo(parent._id)
+                if (divingInfo == null) {
+                    return null
+                }
+
+                const oneDay = 1000 * 60 * 60 * 24;
+
+                const startedAt = new Date(divingInfo.startedAt)
+                const today = new Date()
+                const diffInTime = startedAt.getTime() - today.getTime();
+
+                divingInfo.daysLeft = Math.round(diffInTime / oneDay);
+                return divingInfo
+            }
+        },
     },
 
     Query: {
@@ -80,16 +104,16 @@ module.exports = {
 
 async function getJoinedRoomList(uid) {
 
-    let userHeader = await client.generateUserHeader(uid)
+    let userHeader = await rocketChatClient.generateUserHeader(uid)
 
-    let result = await client.get('/api/v1/rooms.get', userHeader)
+    let result = await rocketChatClient.get('/api/v1/rooms.get', userHeader)
     if (!result.success) {
         console.log(`chat-room-resolver | getJoinedRoomList: failed, result=${JSON.stringify(result)}`)
         return null
     }
     // console.log(`chat-room-resolver | getJoinedRoomList: result=${JSON.stringify(result)}`)
 
-    let subscriptions = await client.get('/api/v1/subscriptions.get', userHeader)
+    let subscriptions = await rocketChatClient.get('/api/v1/subscriptions.get', userHeader)
     // console.log(`chat-room-resolver | getJoinedRoomList: subscriptions=${JSON.stringify(subscriptions)}`)
 
     let subscriptionMap = new Map()
@@ -108,12 +132,12 @@ async function getJoinedRoomList(uid) {
 
 async function getChatRoom(uid, roomId) {
 
-    let userHeader = await client.generateUserHeader(uid)
+    let userHeader = await rocketChatClient.generateUserHeader(uid)
     let queryParams = {
         roomId: roomId
     }
 
-    let result = await client.get('/api/v1/rooms.info', userHeader, queryParams)
+    let result = await rocketChatClient.get('/api/v1/rooms.info', userHeader, queryParams)
     if (!result.success) {
         console.log(`chat-room-resolver | getChatRoom: failed, result=${JSON.stringify(result)}`)
         return null
@@ -124,9 +148,9 @@ async function getChatRoom(uid, roomId) {
 
 async function getChannelInfo(uid, roomId) {
 
-    let result = await client.get(
+    let result = await rocketChatClient.get(
         '/api/v1/channels.info',
-        await client.generateUserHeader(uid),
+        await rocketChatClient.generateUserHeader(uid),
         { roomId: roomId }
     )
 
@@ -140,9 +164,9 @@ async function getChannelInfo(uid, roomId) {
 
 async function leaveRoom(uid, roomId) {
 
-    let result = await client.post(
+    let result = await rocketChatClient.post(
         '/api/v1/channels.leave',
-        await client.generateUserHeader(uid),
+        await rocketChatClient.generateUserHeader(uid),
         { roomId: roomId }
     )
 
@@ -153,9 +177,9 @@ async function leaveRoom(uid, roomId) {
         }
     }
 
-    result = await client.post(
+    result = await rocketChatClient.post(
         '/api/v1/channels.close',
-        await client.generateUserHeader(uid),
+        await rocketChatClient.generateUserHeader(uid),
         { roomId: roomId }
     )
 
@@ -165,7 +189,7 @@ async function leaveRoom(uid, roomId) {
             success: false
         }
     }
-    
+
     return {
         success: true
     }
@@ -173,9 +197,9 @@ async function leaveRoom(uid, roomId) {
 
 async function deleteRoom(uid, roomId) {
 
-    let result = await client.post(
+    let result = await rocketChatClient.post(
         '/api/v1/channels.delete',
-        await client.generateUserHeader(uid),
+        await rocketChatClient.generateUserHeader(uid),
         { roomId: roomId }
     )
 
@@ -193,9 +217,9 @@ async function deleteRoom(uid, roomId) {
 
 async function markRead(uid, roomId) {
 
-    let result = await client.post(
+    let result = await rocketChatClient.post(
         '/api/v1/subscriptions.read',
-        await client.generateUserHeader(uid),
+        await rocketChatClient.generateUserHeader(uid),
         { rid: roomId }
     )
 
@@ -212,9 +236,9 @@ async function markRead(uid, roomId) {
 }
 async function createRoom(uid, title, membersUids) {
 
-    let userHeader = await client.generateUserHeader(uid)
+    let userHeader = await rocketChatClient.generateUserHeader(uid)
 
-    let result = await client.post(
+    let result = await rocketChatClient.post(
         '/api/v1/channels.create',
         userHeader,
         {
@@ -239,9 +263,9 @@ async function createRoom(uid, title, membersUids) {
 
 async function setDescription(uid, roomId, title) {
 
-    let userHeader = await client.generateUserHeader(uid)
+    let userHeader = await rocketChatClient.generateUserHeader(uid)
 
-    let descriptionResult = await client.post(
+    let descriptionResult = await rocketChatClient.post(
         '/api/v1/channels.setDescription',
         userHeader,
         {
@@ -264,9 +288,9 @@ async function setDescription(uid, roomId, title) {
 
 async function invite(uid, roomId, userId) {
 
-    let userHeader = await client.generateUserHeader(uid)
+    let userHeader = await rocketChatClient.generateUserHeader(uid)
 
-    let result = await client.post(
+    let result = await rocketChatClient.post(
         '/api/v1/channels.invite',
         userHeader,
         {
@@ -289,9 +313,9 @@ async function invite(uid, roomId, userId) {
 
 async function kick(uid, roomId) {
 
-    let userHeader = await client.generateUserHeader(uid)
+    let userHeader = await rocketChatClient.generateUserHeader(uid)
 
-    let result = await client.post(
+    let result = await rocketChatClient.post(
         '/api/v1/channels.leave',
         userHeader,
         { roomId: roomId }

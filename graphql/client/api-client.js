@@ -65,11 +65,33 @@ class ApiClient {
         }
 
         try {
-            console.log(`ApiClient | getFcmTokenList: variable=${JSON.stringify(variable)}`)
             const data = await this.client.query({ query: query, variables: variable })
-            console.log(`ApiClient | getFcmTokenList: data=${JSON.stringify(data)}`)
-
             return data.data.getUsersByUid.map(user => user.fcmToken)
+
+        } catch (err) {
+            console.log(`ApiClient | getFcmTokenList: ERROR, ${err}`)
+        }
+    }
+
+    async getDivingInfo(chatRoomId) {
+
+        const query = gql`
+            query GetDivingByChatRoomId($chatRoomId: String!) {
+                getDivingByChatRoomId(chatRoomId: $chatRoomId) {
+                    _id
+                    title
+                    startedAt
+                }
+            }
+        `
+
+        const variable = {
+            chatRoomId: chatRoomId
+        }
+
+        try {
+            const data = await this.client.query({ query: query, variables: variable })
+            return data.data.getDivingByChatRoomId
 
         } catch (err) {
             console.log(`ApiClient | getFcmTokenList: ERROR, ${err}`)

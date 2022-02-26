@@ -53,7 +53,15 @@ type ChatRoom {
     numOfmessages: Int
     unread: Int
 
+    divingInfo: DivingInfo
+
     createdAt: Date
+}
+
+type DivingInfo {
+    _id: ID
+    title: String
+    daysLeft: Int
 }
 
 type ChatRoomInfo {
