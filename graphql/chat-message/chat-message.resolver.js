@@ -85,7 +85,7 @@ module.exports = {
         async postMessageToRoom(parent, args, context, info) {
 
             console.log(`mutation | postMessageToRoom: args=${JSON.stringify(args)}`)
-            return await postMessage(context.uid, args.roomId, args.input)
+            return await postMessage(context.uid, args.roomId, args.input, 'channel')
         },
 
         async postMessageToUser(parent, args, context, info) {
@@ -97,7 +97,7 @@ module.exports = {
         async postMessageToChannel(parent, args, context, info) {
 
             console.log(`mutation | postMessageToChannel: args=${JSON.stringify(args)}`)
-            return await postMessage(context.uid, `#${args.channelId}`, args.input)
+            return await postMessage(context.uid, `#${args.channelId}`, args.input, 'channel')
         },
     },
 
@@ -169,7 +169,7 @@ async function postDirectMessage(senderUserId, targetUserId, text, /* attachment
     return chatMessage
 }
 
-async function postMessage(senderUid, roomId, text, /* attachment */) {
+async function postMessage(senderUid, roomId, text, roomType/* attachment */) {
 
     let userHeader = await rocketChatClient.generateUserHeader(senderUid)
 
@@ -187,41 +187,65 @@ async function postMessage(senderUid, roomId, text, /* attachment */) {
         return null
     }
 
-    // console.log(`chat-message-resolver | userInfo=${JSON.stringify(userInfo.user.name)}`)
-
-    let roomInfo = await rocketChatClient.get(
-        '/api/v1/rooms.info',
-        userHeader,
-        {
-            roomId: roomId
-        }
-    )
-    console.log(`chat-message-resolver | postMessage: roomInfo=${JSON.stringify(roomInfo.room)}`)
-
-    if (roomInfo.room.usernames && roomInfo.room.usernames.length > 0) {
-        let tokenList = await apiClient.getFcmTokenList(
-            roomInfo.room.usernames
-                .filter(username => username != senderUid)
-        )
-
-        if (tokenList && tokenList.length > 0) {
-            await firebaseClient.sendMulticast(tokenList, 'onNewChatMessage', chatMessage)
-        }
-    }
-    
     let userInfo = await rocketChatClient.get(
         '/api/v1/users.info',
         userHeader,
-        {
-            username: senderUid
-        }
+        { username: senderUid }
     )
 
     let chatMessage = convertChatMessage(result.message)
     chatMessage.authorName = userInfo.user.name
     chatMessage.avatar = await apiClient.getUserProfileImage(senderUid)
 
+    let userUids = await getUserUidsByRoomId(roomId, roomType, senderUid)
+    if (userUids && userUids.length > 0) {
+        let tokenList = await apiClient.getFcmTokenList(userUids)
+        tokenList = tokenList.filter(token => token)
+        if (tokenList && tokenList.length > 0) {
+            await firebaseClient.sendMulticast(tokenList, 'onNewChatMessage', chatMessage)
+        }
+    }
+
     return chatMessage
+}
+
+async function getUserUidsByRoomId(roomId, roomType, senderId) {
+
+    if (roomType == 'direct') {
+
+        let roomInfo = await rocketChatClient.get(
+            '/api/v1/rooms.info',
+            userHeader,
+            {
+                roomId: roomId
+            }
+        )
+
+        if (roomInfo.room.usernames && roomInfo.room.usernames.length > 0) {
+            return roomInfo.room.usernames
+                .filter(username => username != senderUid)
+        }
+
+        return null
+    } else {
+
+        let queryParams = {
+            roomId: roomId
+        }
+
+        let result = await rocketChatClient.get(
+            '/api/v1/channels.members',
+            rocketChatClient.getAixosAdminHeader(),
+            queryParams
+        )
+        if (!result.success || !result.members) {
+            console.log(`chat-message-resolver | getChannelMemberList: failed, result=${JSON.stringify(result)}`)
+            return null
+        }
+
+        return result.members
+            .map(member => member.username)
+    }
 }
 
 /* upadtedSince type: 2019-04-16T18:30:46.669Z */

@@ -13,9 +13,8 @@ class FirebaseClient {
         if (!tokenList || tokenList.length == 0) {
             return
         }
-        // console.log(`FirebaseClient | sendMulticast: tokenList=${JSON.stringify(tokenList)}, event=${event}, data=${JSON.stringify(data)}`)
 
-        let result = getMessaging(getApp()).sendMulticast({
+        await getMessaging(getApp()).sendMulticast({
             data: {
                 event: event,
                 ...data

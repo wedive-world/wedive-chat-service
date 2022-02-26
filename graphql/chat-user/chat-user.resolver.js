@@ -1,5 +1,5 @@
 const RocketChatClient = require("../client/rocketchat-client")
-const client = new RocketChatClient()
+const rocketChatClient = new RocketChatClient()
 
 const ApiClient = require("../client/api-client")
 const apiClient = new ApiClient()
@@ -96,9 +96,9 @@ async function findUserByNickName(nickName) {
         })
     }
 
-    let result = await client.get(
+    let result = await rocketChatClient.get(
         '/api/v1/users.autocomplete',
-        client.getAixosAdminHeader(),
+        rocketChatClient.getAixosAdminHeader(),
         queryParams
     )
     if (!result.success || !result.items) {
@@ -116,7 +116,7 @@ async function getChatUserByUserName(userName) {
         username: userName
     }
 
-    let result = await client.get('/api/v1/users.info', client.getAixosAdminHeader(), queryParams)
+    let result = await rocketChatClient.get('/api/v1/users.info', rocketChatClient.getAixosAdminHeader(), queryParams)
     if (!result.success || !result.user) {
         console.log(`chat-user-service | getChatUserById: failed, result=${JSON.stringify(result)}`)
         return null
@@ -131,7 +131,7 @@ async function getChatUserByUserId(userId) {
         userId: userId
     }
 
-    let result = await client.get('/api/v1/users.info', client.getAixosAdminHeader(), queryParams)
+    let result = await rocketChatClient.get('/api/v1/users.info', rocketChatClient.getAixosAdminHeader(), queryParams)
     if (!result.success || !result.user) {
         console.log(`chat-user-service | getChatUserById: failed, result=${JSON.stringify(result)}`)
         return null
@@ -146,7 +146,7 @@ async function getChannelMemberList(uid, roomId) {
         roomId: roomId
     }
 
-    let result = await client.get('/api/v1/channels.members', client.getAixosAdminHeader(), queryParams)
+    let result = await rocketChatClient.get('/api/v1/channels.members', rocketChatClient.getAixosAdminHeader(), queryParams)
     if (!result.success || !result.members) {
         console.log(`chat-user-service | getChannelMemberList: failed, result=${JSON.stringify(result)}`)
         return null
@@ -158,7 +158,7 @@ async function getChannelMemberList(uid, roomId) {
 
 async function createUser(uid, email, name) {
 
-    const hashPassword = client.generatePassword(uid)
+    const hashPassword = rocketChatClient.generatePassword(uid)
 
     const postData = {
         username: uid,
@@ -168,7 +168,7 @@ async function createUser(uid, email, name) {
         joinDefaultChannels: false,
     }
 
-    let result = await client.post('/api/v1/users.create', client.getAixosAdminHeader(), postData)
+    let result = await rocketChatClient.post('/api/v1/users.create', rocketChatClient.getAixosAdminHeader(), postData)
     if (!result.success || !result.user) {
         console.log(`chat-user-service | createUser: failed, result=${JSON.stringify(result)}`)
         return null
@@ -191,7 +191,7 @@ async function updateUser(uid, name, avatarUrl) {
             avatarUrl: avatarUrl
         }
 
-        let avatarResult = await client.post('/api/v1/users.setAvatar', await client.generateUserHeader(uid), avatarData)
+        let avatarResult = await rocketChatClient.post('/api/v1/users.setAvatar', await rocketChatClient.generateUserHeader(uid), avatarData)
         if (!avatarResult.success) {
             console.log(`chat-user-service | updateUser: failed, avatarResult=${JSON.stringify(avatarResult)}`)
             reason += avatarResult
@@ -206,7 +206,7 @@ async function updateUser(uid, name, avatarUrl) {
             }
         }
 
-        let userResult = await client.post('/api/v1/users.updateOwnBasicInfo', await client.generateUserHeader(uid), userData)
+        let userResult = await rocketChatClient.post('/api/v1/users.updateOwnBasicInfo', await rocketChatClient.generateUserHeader(uid), userData)
         if (!userResult.success) {
             console.log(`chat-user-service | updateUser: failed, userResult=${JSON.stringify(userResult)}`)
             reason += userResult
@@ -231,7 +231,7 @@ async function updateFcmToken(uid, fcmToken) {
         }
     }
 
-    let result = await client.post('/api/v1/users.update', client._getUserToken(uid), userData)
+    let result = await rocketChatClient.post('/api/v1/users.update', rocketChatClient._getUserToken(uid), userData)
     if (!result.success) {
         console.log(`chat-user-service | updateFcmToken: failed, userResult=${JSON.stringify(result)}`)
     }
