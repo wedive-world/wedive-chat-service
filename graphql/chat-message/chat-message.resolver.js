@@ -187,13 +187,6 @@ async function postMessage(senderUid, roomId, text, /* attachment */) {
         return null
     }
 
-    let userInfo = await rocketChatClient.get(
-        '/api/v1/users.info',
-        userHeader,
-        {
-            username: senderUid
-        }
-    )
     // console.log(`chat-message-resolver | userInfo=${JSON.stringify(userInfo.user.name)}`)
 
     let roomInfo = await rocketChatClient.get(
@@ -203,22 +196,30 @@ async function postMessage(senderUid, roomId, text, /* attachment */) {
             roomId: roomId
         }
     )
-    // console.log(`chat-message-resolver | roomInfo=${JSON.stringify(roomInfo.room.usernames)}`)
+    console.log(`chat-message-resolver | postMessage: roomInfo=${JSON.stringify(roomInfo.room)}`)
+
+    if (roomInfo.room.usernames && roomInfo.room.usernames.length > 0) {
+        let tokenList = await apiClient.getFcmTokenList(
+            roomInfo.room.usernames
+                .filter(username => username != senderUid)
+        )
+
+        if (tokenList && tokenList.length > 0) {
+            await firebaseClient.sendMulticast(tokenList, 'onNewChatMessage', chatMessage)
+        }
+    }
+    
+    let userInfo = await rocketChatClient.get(
+        '/api/v1/users.info',
+        userHeader,
+        {
+            username: senderUid
+        }
+    )
 
     let chatMessage = convertChatMessage(result.message)
     chatMessage.authorName = userInfo.user.name
     chatMessage.avatar = await apiClient.getUserProfileImage(senderUid)
-
-    console.log(`chatMessage=${JSON.stringify(chatMessage)}`)
-
-    let tokenList = await apiClient.getFcmTokenList(
-        roomInfo.room.usernames
-            .filter(username => username != senderUid)
-    )
-
-    if (tokenList && tokenList.length > 0) {
-        await firebaseClient.sendMulticast(tokenList, 'onNewChatMessage', chatMessage)
-    }
 
     return chatMessage
 }
