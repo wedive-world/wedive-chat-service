@@ -60,6 +60,7 @@ type ChatRoom {
 
 type DivingInfo {
     _id: ID
+    title: String
     name: String
     daysLeft: Int
 }
