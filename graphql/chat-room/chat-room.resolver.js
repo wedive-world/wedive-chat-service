@@ -45,11 +45,13 @@ module.exports = {
 
                 divingInfo.daysLeft = Math.round(diffInTime / oneDay);
 
-                if (divingInfo.diveSites) {
+                if (divingInfo.diveSites && divingInfo.diveSites.length > 0) {
                     divingInfo.name = divingInfo.diveSites[0].name
-                } else if (divingInfo.divePoints) {
+
+                } else if (divingInfo.divePoints && divingInfo.divePoints.length > 0) {
                     divingInfo.name = divingInfo.divePoints[0].name
-                } else if (divingInfo.diveCenters) {
+
+                } else if (divingInfo.diveCenters && divingInfo.diveCenters.length > 0) {
                     divingInfo.name = divingInfo.diveCenters[0].name
                 }
 
