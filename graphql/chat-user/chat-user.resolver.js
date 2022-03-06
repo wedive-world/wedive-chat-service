@@ -29,6 +29,36 @@ module.exports = {
         async owner(parent, args, context, info) {
             return await getChatUserByUserId(parent.ownerUserId)
         },
+
+        async title(parent, args, context, info) {
+
+            if (parent.type == 'direct') {
+                let oppositeUserId = parent.userIds
+                    .find(userId => userId != context.uid)
+
+                if (!oppositeUserId) {
+                    return "대화 상대 없음"
+                }
+                let chatUser = await getChatUserByUserId(oppositeUserId)
+
+                if (!chatUser) {
+                    return "대화 상대 없음"
+                }
+                return chatUser.name
+            }
+
+            if (parent.type == 'channel' && !parent.title) {
+                let chatUsers = await getChannelMemberList(context.uid, parent._id)
+                if (!chatUsers) {
+                    return "대화 상대 없음"
+                }
+
+                return chatUsers.map(chatUser => chatUser.name)
+                    .reduce((a, b) => a + ", " + b)
+            }
+
+            return parent.title
+        },
     },
 
     ChatMessage: {
