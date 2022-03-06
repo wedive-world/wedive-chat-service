@@ -32,29 +32,35 @@ module.exports = {
     ChatRoom: {
         async divingInfo(parent, args, context, info) {
             if (parent.type == 'channel') {
-                let divingInfo = await apiClient.getDivingInfo(parent._id)
-                if (divingInfo == null) {
+                let diving = await apiClient.getDivingInfo(parent._id)
+
+                if (!diving) {
                     return null
                 }
 
+                let divingInfo = { title: diving.title }
+
                 const oneDay = 1000 * 60 * 60 * 24;
 
-                const startedAt = new Date(divingInfo.startedAt)
+                const startedAt = new Date(diving.startedAt)
                 const today = new Date()
                 const diffInTime = startedAt.getTime() - today.getTime();
 
+                console.log(`startedAt=${JSON.stringify(startedAt)} diffInTime=${diffInTime}`)
+
                 divingInfo.daysLeft = Math.round(diffInTime / oneDay);
 
-                if (divingInfo.diveSites && divingInfo.diveSites.length > 0) {
-                    divingInfo.name = divingInfo.diveSites[0].name
+                if (diving.diveSites && diving.diveSites.length > 0) {
+                    divingInfo.name = diving.diveSites[0].name
 
-                } else if (divingInfo.divePoints && divingInfo.divePoints.length > 0) {
-                    divingInfo.name = divingInfo.divePoints[0].name
+                } else if (diving.divePoints && diving.divePoints.length > 0) {
+                    divingInfo.name = diving.divePoints[0].name
 
-                } else if (divingInfo.diveCenters && divingInfo.diveCenters.length > 0) {
-                    divingInfo.name = divingInfo.diveCenters[0].name
+                } else if (diving.diveCenters && diving.diveCenters.length > 0) {
+                    divingInfo.name = diving.diveCenters[0].name
                 }
 
+                console.log(`divingInfo=${JSON.stringify(diving)}`)
                 return divingInfo
             }
         },
