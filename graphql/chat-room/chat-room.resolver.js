@@ -46,8 +46,6 @@ module.exports = {
                 const today = new Date()
                 const diffInTime = startedAt.getTime() - today.getTime();
 
-                console.log(`startedAt=${JSON.stringify(startedAt)} diffInTime=${diffInTime}`)
-
                 divingInfo.daysLeft = Math.round(diffInTime / oneDay);
 
                 if (diving.diveSites && diving.diveSites.length > 0) {
@@ -60,7 +58,6 @@ module.exports = {
                     divingInfo.name = diving.diveCenters[0].name
                 }
 
-                console.log(`divingInfo=${JSON.stringify(diving)}`)
                 return divingInfo
             }
         },
