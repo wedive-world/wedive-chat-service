@@ -19,7 +19,15 @@ class FirebaseClient {
                 event: event,
                 ...data
             },
-            tokens: tokenList
+            tokens: tokenList,
+            android: {
+                priority: "normal"
+            },
+            apns: {
+                headers: {
+                    "apns-priority": "5"
+                }
+            },
         })
 
         // console.log(`FirebaseClient | sendMulticast: result=${JSON.stringify(result)}`)
