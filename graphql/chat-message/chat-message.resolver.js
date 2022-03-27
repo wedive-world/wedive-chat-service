@@ -41,7 +41,7 @@ module.exports = {
         async getMessagesByRoomId(parent, args, context, info) {
 
             var date = new Date();
-            date.setDate(date.getDate() - 30);
+            date.setDate(date.getDate() - 90);
 
             console.log(`query | getMessagesByRoomId: args=${JSON.stringify(args)}, context=${JSON.stringify(context)}, date=${date.toISOString()}`)
 
