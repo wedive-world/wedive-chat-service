@@ -5,6 +5,7 @@ module.exports = gql`
 type Query {
     getChatUserByUsername(username: String): ChatUser @cacheControl(maxAge: 30)
     findUserByNickName(nickName: String): [ChatUser]
+    getTotalUnreadByCurrentUser: Int
 }
 
 type Mutation {

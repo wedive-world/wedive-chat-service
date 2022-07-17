@@ -92,6 +92,10 @@ module.exports = {
             console.log(`query | getChatUserByUsername: context=${JSON.stringify(context)}`)
             return await findUserByNickName(args.nickName)
         },
+        async getTotalUnreadByCurrentUser(parent, args, context, info) {
+            console.log(`query | getTotalUnreadByCurrentUser: context=${JSON.stringify(context)}`)
+            return await getTotalUnreadByUid(context.uid)
+        },
     },
 
     Mutation: {
@@ -271,6 +275,20 @@ async function updateFcmToken(uid, fcmToken) {
     return {
         success: result.success
     }
+}
+
+async function getTotalUnreadByUid(uid) {
+    let userHeader = await rocketChatClient.generateUserHeader(uid)
+    let subscriptions = await rocketChatClient.get('/api/v1/subscriptions.get', userHeader)
+
+    if (!subscriptions.success) {
+        console.error(subscriptions)
+        return 0
+    }
+
+    return subscriptions.update
+        .map(room => room.unread)
+        .reduce((a, b) => a + b)
 }
 
 function convertUser(rocketChatUser) {
