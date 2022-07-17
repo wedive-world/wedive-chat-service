@@ -86,6 +86,12 @@ module.exports = {
             return await leaveRoom(context.uid, args.roomId)
         },
 
+        async leaveChannel(parent, args, context, info) {
+            console.log(`mutation | leaveChannel: args=${JSON.stringify(args)}`)
+            console.log(`mutation | leaveChannel: context=${JSON.stringify(context)}`)
+            return await leaveChannel(context.uid, args.roomId)
+        },
+
         async deleteRoom(parent, args, context, info) {
             console.log(`mutation | deleteRoom: args=${JSON.stringify(args)}`)
             console.log(`mutation | deleteRoom: context=${JSON.stringify(context)}`)
@@ -176,23 +182,31 @@ async function getChannelInfo(uid, roomId) {
     return convertChatRoom(result.channel)
 }
 
-async function leaveRoom(uid, roomId) {
+async function leaveChannel(uid, channelId) {
 
     let result = await rocketChatClient.post(
         '/api/v1/channels.leave',
         await rocketChatClient.generateUserHeader(uid),
-        { roomId: roomId }
+        { roomId: channelId }
     )
 
     if (!result.success) {
-        console.log(`chat-room-resolver | leaveRoom: failed, result=${JSON.stringify(result)}`)
+        console.log(`chat-room-resolver | leaveChannel: failed, result=${JSON.stringify(result)}`)
         return {
-            success: false
+            success: false,
+            reason: JSON.stringify(result)
         }
     }
 
-    result = await rocketChatClient.post(
-        '/api/v1/channels.close',
+    return {
+        success: true
+    }
+}
+
+async function leaveRoom(uid, roomId) {
+
+    let result = await rocketChatClient.post(
+        '/api/v1/rooms.leave',
         await rocketChatClient.generateUserHeader(uid),
         { roomId: roomId }
     )
@@ -200,7 +214,8 @@ async function leaveRoom(uid, roomId) {
     if (!result.success) {
         console.log(`chat-room-resolver | leaveRoom: failed, result=${JSON.stringify(result)}`)
         return {
-            success: false
+            success: false,
+            reason: JSON.stringify(result)
         }
     }
 
