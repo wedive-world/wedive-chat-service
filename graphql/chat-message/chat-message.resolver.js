@@ -160,6 +160,8 @@ async function postDirectMessage(senderUserId, targetUserId, text, /* attachment
     let chatMessage = convertChatMessage(result.message)
     chatMessage.authorName = result.message.u.name
     chatMessage.avatar = await apiClient.getUserProfileImage(senderUserId)
+    let unread = await getSubscriptionRoom(targetUserId, chatMessage.chatRoom)
+    chatMessage.unread = String(unread.unread)
     let tokenList = await apiClient.getFcmTokenList([targetUserId])
 
     if (tokenList && tokenList.length > 0) {
@@ -196,6 +198,7 @@ async function postMessage(senderUid, roomId, text, roomType/* attachment */) {
     let chatMessage = convertChatMessage(result.message)
     chatMessage.authorName = userInfo.user.name
     chatMessage.avatar = await apiClient.getUserProfileImage(senderUid)
+    chatMessage.unread = await getSubscriptionRoom(senderUserId, chatMessage.chatRoom)
 
     let userUids = await getUserUidsByRoomId(roomId, roomType, senderUid)
     if (userUids && userUids.length > 0) {
@@ -207,6 +210,22 @@ async function postMessage(senderUid, roomId, text, roomType/* attachment */) {
     }
 
     return chatMessage
+}
+
+async function getSubscriptionRoom(uid, roomId) {
+
+    let result = await rocketChatClient.get(
+        '/api/v1/subscriptions.getOne',
+        await rocketChatClient.generateUserHeader(uid),
+        { roomId: roomId }
+    )
+
+    if (!result.success) {
+        console.log(`chat-room-resolver | getSubscriptionRoom: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return result.subscription
 }
 
 async function getUserUidsByRoomId(roomId, roomType, senderId) {
