@@ -20,7 +20,7 @@ class FirebaseClient {
         }
         
         try {
-            await sendMulticastInternal(tokenList, event, data)
+            await this.sendMulticastInternal(tokenList, event, data)
         } catch (e) {
             console.error(e)
         }
