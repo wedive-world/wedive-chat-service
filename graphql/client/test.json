@@ -1,40 +1,216 @@
 {
-    "errors": [
+    "address_components": [
         {
-            "message": "data must only contain string values",
-            "locations": [
-                {
-                    "line": 3,
-                    "column": 21
-                }
-            ],
-            "path": [
-                "joinDiving"
-            ],
-            "extensions": {
-                "code": "INTERNAL_SERVER_ERROR",
-                "exception": {
-                    "errorInfo": {
-                        "code": "messaging/invalid-payload",
-                        "message": "data must only contain string values"
-                    },
-                    "codePrefix": "messaging",
-                    "stacktrace": [
-                        "Error: data must only contain string values",
-                        "    at FirebaseMessagingError.FirebaseError [as constructor] (/usr/src/wedive-api/node_modules/firebase-admin/lib/utils/error.js:44:28)",
-                        "    at FirebaseMessagingError.PrefixedFirebaseError [as constructor] (/usr/src/wedive-api/node_modules/firebase-admin/lib/utils/error.js:90:28)",
-                        "    at new FirebaseMessagingError (/usr/src/wedive-api/node_modules/firebase-admin/lib/utils/error.js:279:16)",
-                        "    at /usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging-internal.js:78:19",
-                        "    at Array.forEach (<anonymous>)",
-                        "    at validateStringMap (/usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging-internal.js:76:22)",
-                        "    at Object.validateMessage (/usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging-internal.js:55:5)",
-                        "    at /usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging.js:258:38",
-                        "    at Array.map (<anonymous>)",
-                        "    at /usr/src/wedive-api/node_modules/firebase-admin/lib/messaging/messaging.js:257:33"
-                    ]
-                }
-            }
+            "long_name": "죽왕면",
+            "short_name": "죽왕면",
+            "types": [
+                "sublocality_level_2",
+                "sublocality",
+                "political"
+            ]
+        },
+        {
+            "long_name": "동해시",
+            "short_name": "동해시",
+            "types": [
+                "locality",
+                "political"
+            ]
+        },
+        {
+            "long_name": "강원도",
+            "short_name": "강원도",
+            "types": [
+                "administrative_area_level_1",
+                "political"
+            ]
+        },
+        {
+            "long_name": "대한민국",
+            "short_name": "KR",
+            "types": [
+                "country",
+                "political"
+            ]
+        },
+        {
+            "long_name": "219-823",
+            "short_name": "219-823",
+            "types": [
+                "postal_code"
+            ]
         }
     ],
-    "data": null
+    "adr_address": "<span class=\"country-name\">대한민국</span> <span class=\"postal-code\">219-823</span> <span class=\"region\">강원도</span> <span class=\"locality\">동해시</span> <span class=\"street-address\">죽왕면</span>",
+    "business_status": "OPERATIONAL",
+    "formatted_address": "대한민국 강원도 동해시 죽왕면",
+    "geometry": {
+        "location": {
+            "lat": 38.29638689999999,
+            "lng": 128.5502482
+        },
+        "viewport": {
+            "northeast": {
+                "lat": 38.29773588029149,
+                "lng": 128.5515971802915
+            },
+            "southwest": {
+                "lat": 38.29503791970849,
+                "lng": 128.5488992197085
+            }
+        }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "LF문암다이브리조트",
+    "photos": [
+        {
+            "height": 3120,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/113109060451105803509\">설한나</a>"
+            ],
+            "photo_reference": "Aap_uEDyaLrIKXXyeItLD4smxsfgpPqMNOv1gNf47MKo4g7GZDnBrD_oyo6MiFQV7FkciEBoxiGGu0TMk-y1z4odo2LS_tWbclowHPQYQc3Hln6Re5mW_cAnRpFlSIaRzbDzGQgGaGPzJ5At_rrhy787do_COszvGO90sLLBFoJaGiOcnwwm",
+            "width": 4160
+        },
+        {
+            "height": 3024,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/107539245349371823551\">Ryu에스테반</a>"
+            ],
+            "photo_reference": "Aap_uEAfAHXku51wVyQ6G3eXgOZz9wTWCh-HID7cv_lpcpCgSA_6orDiquLW33-tSPQQRcQVEqFhUFofC6DRpk057f9SCWnlKWT0KzZ2KZThnHrPiY6Woxw8csE3m2wyxTDVqJnlSSf3usW5lwcQFY3aOm5rCs4g30RuXBYwFT9pXw74Emk-",
+            "width": 4032
+        },
+        {
+            "height": 3024,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/110156512313839142162\">Leo Bae</a>"
+            ],
+            "photo_reference": "Aap_uECgqolyUDvjfdaUV3sHcxWqSIeHfcHEGYY-D3fj6v0nrjj7IKzTf-ovS30l6_HRk1sBYIwwaP4V5mdq3Bho8DsTppc9Sr8r1aFNn_NdGDKYi7DKtlBWwI_O5eOkpw_3zJ_OQ5AboL5RYyQiNdLZOS6No3dYT1HTtOPLpPhdbXZwztlL",
+            "width": 4032
+        },
+        {
+            "height": 2268,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/112739239298267921741\">김병석</a>"
+            ],
+            "photo_reference": "Aap_uECuGbS01pbRk6eGgj9hs_jaczd-vnOYws4b9zD834HrvGoSaMVx-UFgS4MYZXnUgAKPhdMEnOPKFZCeAUrid3oa0UOHL1gxgxEBehqY1HkMIAkLSOpzlUb-fMnhSlGmRtLINprqWBv95PZDmJ0_EJKKfV_29JW4PxcWGRQPL6IwkSiy",
+            "width": 4032
+        },
+        {
+            "height": 4032,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/110156512313839142162\">Leo Bae</a>"
+            ],
+            "photo_reference": "Aap_uEBbfvUc_idiYvjV57QHvDDqvF4Q8cxVVPThf0h6LBFfY-bTYxFZqUaEWEOBFtM_UEja3AJQ6PQnJT3l1qLmIDo-yWkPF0hOfbGjq_RV-uYftEcmCkYQYIfMBBsibkeXeVmT9ahkYEOJ9NeB4YKGazShzfRtuzr9HwcAT3LFDLJqKomN",
+            "width": 3024
+        },
+        {
+            "height": 3024,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/112537106105436713568\">신승욱</a>"
+            ],
+            "photo_reference": "Aap_uEAeyAJ-2uVxiW_2qJTx6KAaGrN-podn2KDTb5TPcF1UMR7SE4wMh0zbQiscs591UCIoYVJcwKAW83oREOfvANOc9sWfj9yaQy3Ono08UJYUq_L2XtCtHvYQeUrHhxer33C_TXFwx-ET3ef9Cbh21mYZmNeNoX2AwIaw64haLtcagb6h",
+            "width": 4032
+        },
+        {
+            "height": 3024,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/116643679930398795737\">SUNGMIN HONG</a>"
+            ],
+            "photo_reference": "Aap_uEDFCKbuJ2L3THEE3yU6Tl4k9EeuF8wj_9toeYJEi3nn-hp7hYwrTqjZQOckjOGWdKDBgSmu5oEX6h62rAquhIOqWTMq-pSuHs-LeoxdHzirtvX2d0cx_NDdQyOVMa91LSKse1SCdJCaVNom9Qqd7zRm7y94bctY7uOwdpgGXZssOFBL",
+            "width": 4032
+        },
+        {
+            "height": 1080,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/116643679930398795737\">SUNGMIN HONG</a>"
+            ],
+            "photo_reference": "Aap_uEBaG-adsWHu56HV_JIVtRKwdqCUtToVFGr_Vaag5_K_8JjXopVj-AmkGmD3-eZEDn9z2j3MdpiamjM7fov0rcT4ETu-Na1OnEG3qDdQstnM02QcCVlOFc6WvHTBSDCDAl6vYIBt3yzUfzrEkJW0y0a3PBQlNi8RtV8cm1vUyEiF8Gny",
+            "width": 1920
+        },
+        {
+            "height": 4032,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/116643679930398795737\">SUNGMIN HONG</a>"
+            ],
+            "photo_reference": "Aap_uEB4uPP4aDkCDQFKXEz4i2SQz2JGW-FJbD3bvfY_1EQREPSCO4ehAIplREOPmo2ZiNwGTdhfVykjKKQsVrSFiL7ges7XVG8LOaMEA-QixsdNlaih5gQZ8WtS6pTJBVMz3WVEECO99YaSUdSSoNB8Ws_Ca2-6ekF--kG46EOAynPiNigA",
+            "width": 2268
+        },
+        {
+            "height": 2080,
+            "html_attributions": [
+                "<a href=\"https://maps.google.com/maps/contrib/100026610166831305738\">Jun Young Park</a>"
+            ],
+            "photo_reference": "Aap_uEALEHU4JiTanprTjcAObNgxhiFtw8aaiB3KfoaqiTugHtZJAhrujPlSHFTo2XzZc8QIP8nR06bK_tA1b4dATSDvZPTgeyehJ-BgHQXheWuyG6n3UpZrskPT2PsdOiOnqU9gkMa6vgaSGdSyr1O5T3GxpWl5hhMP6FtqTw7FsOO5EM5E",
+            "width": 4160
+        }
+    ],
+    "place_id": "ChIJlw3tQhmV2F8R-N-H7H3VH8k",
+    "plus_code": {
+        "compound_code": "7HW2+H3 대한민국 강원도 고성군",
+        "global_code": "8QCC7HW2+H3"
+    },
+    "rating": 4.8,
+    "reference": "ChIJlw3tQhmV2F8R-N-H7H3VH8k",
+    "reviews": [
+        {
+            "author_name": "Leo Bae",
+            "author_url": "https://www.google.com/maps/contrib/110156512313839142162/reviews",
+            "language": "ko",
+            "profile_photo_url": "https://lh3.googleusercontent.com/a/AATXAJyTO9Tjzth-RQqDx2NEn4ayGKJE2W85KkOvNB-c=s128-c0x00000000-cc-rp-mo-ba5",
+            "rating": 5,
+            "relative_time_description": "8달 전",
+            "text": "예전에 샤워장 생각하면 정말 힘들었던 곳이였는데 샤워장을 깨끗하게 리모델링해서 이번에는 정말 갈 만 했습니다.\n\n장소가 넓어서 휴식하거나 장비 세팅할 때 편해서 좋아요~\n\n이번에 날씨가 궂었는데 바다 속 상태는 좋아서 즐겁게 다이빙 하고 왔습니다.",
+            "time": 1634017449
+        },
+        {
+            "author_name": "Mason Lim",
+            "author_url": "https://www.google.com/maps/contrib/106301358387097734826/reviews",
+            "language": "ko",
+            "profile_photo_url": "https://lh3.googleusercontent.com/a-/AOh14GjKDDn6k_Q34ETO1t7skLDq6P867z_hKguY7tu-Lw=s128-c0x00000000-cc-rp-mo-ba3",
+            "rating": 5,
+            "relative_time_description": "2년 전",
+            "text": "최근에 리모델링해서 시설이 훨씬 좋아졌습니다. 스탭분들 친절하시고 다이빙 포인트도 좋고 큰 배는 리프트 하나에 두명이 올라올 수 있어서 수면대기 시간이 짧아 좋습니다. 물이 흐르면 텐더분이 하강라인까지 가기 수월하도록 배 위에서 장대로 끌어주심. ㅎㅎㅎ",
+            "time": 1591585821
+        },
+        {
+            "author_name": "고현정",
+            "author_url": "https://www.google.com/maps/contrib/111456131211561729385/reviews",
+            "language": "ko",
+            "profile_photo_url": "https://lh3.googleusercontent.com/a/AATXAJxz4JNkqHXe028CuWxrYODFT-4x4NxksJHR0CEj=s128-c0x00000000-cc-rp-mo",
+            "rating": 5,
+            "relative_time_description": "1년 전",
+            "text": "올해 리모델링해서 샤워장이랑 휴게공간이 너무\n깔끔하고 편안해서 다이빙하러 자꾸 가고싶은곳이에요\n사장님과 실장님이 멋져서 더 가고싶어요^^",
+            "time": 1599787698
+        },
+        {
+            "author_name": "이용문",
+            "author_url": "https://www.google.com/maps/contrib/117489655166627595179/reviews",
+            "language": "ko",
+            "profile_photo_url": "https://lh3.googleusercontent.com/a-/AOh14Gg4IopqCA2WNHFm5YUsvVECL7ngbovyd5kXW7zctQ=s128-c0x00000000-cc-rp-mo-ba5",
+            "rating": 5,
+            "relative_time_description": "1년 전",
+            "text": "최적의 시야  보트 죽임",
+            "time": 1602319255
+        },
+        {
+            "author_name": "YoonSeo Choi",
+            "author_url": "https://www.google.com/maps/contrib/117508064755576987400/reviews",
+            "language": "ko",
+            "profile_photo_url": "https://lh3.googleusercontent.com/a-/AOh14Ghdtbr0J-ktrR2rSlkQH9SK-xAKcQZhCU8_uHqePQ=s128-c0x00000000-cc-rp-mo",
+            "rating": 5,
+            "relative_time_description": "1년 전",
+            "text": "오랜만에 갔는데 깨끗하게 개조해서 너무좋았어요!!",
+            "time": 1600589413
+        }
+    ],
+    "types": [
+        "point_of_interest",
+        "establishment"
+    ],
+    "url": "https://maps.google.com/?cid=14492536862717501432",
+    "user_ratings_total": 18,
+    "utc_offset": 540,
+    "vicinity": "동해시 죽왕면"
 }

@@ -13,7 +13,22 @@ class FirebaseClient {
         if (!tokenList || tokenList.length == 0) {
             return
         }
+        tokenList = tokenList.filter(token => token)
 
+        if (!tokenList || tokenList.length == 0) {
+            return
+        }
+        
+        try {
+            await sendMulticastInternal(tokenList, event, data)
+        } catch (e) {
+            console.error(e)
+        }
+
+        // console.log(`FirebaseClient | sendMulticast: result=${JSON.stringify(result)}`)
+    }
+
+    async sendMulticastInternal(tokenList, event, data) {
         await getMessaging(getApp()).sendMulticast({
             data: {
                 event: event,
@@ -29,8 +44,6 @@ class FirebaseClient {
                 }
             },
         })
-
-        // console.log(`FirebaseClient | sendMulticast: result=${JSON.stringify(result)}`)
     }
 }
 
