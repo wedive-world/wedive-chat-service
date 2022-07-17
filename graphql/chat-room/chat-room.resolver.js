@@ -206,7 +206,7 @@ async function leaveChannel(uid, channelId) {
 async function leaveRoom(uid, roomId) {
     let userHeader = await rocketChatClient.generateUserHeader(uid)
     let result = await rocketChatClient.post(
-        '/api/v1/rooms.leave',
+        '/api/v1/im.close',
         userHeader,
         { roomId: roomId }
     )
