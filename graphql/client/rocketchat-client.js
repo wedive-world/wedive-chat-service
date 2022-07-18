@@ -210,6 +210,86 @@ class RocketChatClient {
         return subSession
     }
 
+    async subscribeUserJoinedRoomChanged(uid, userId, subSession, onMessage) {
+        console.log(`RocketChatClient | subscribeUserJoinedRoomChanged: uid=${uid}}}`)
+
+        const loginSession = randomUUID()
+        let userHeader = await this.generateUserHeader(uid)
+        // console.log(`RocketChatClient | userHeader created!`)
+
+        const webSocket = new WebSocket(this._getWssHost())
+
+        // console.log(`RocketChatClient | socket created!, url=${webSocket.url} connected=${webSocket.readyState}`)
+
+        webSocket.onopen = async function () {
+            console.log('RocketChatClient | subscribeUserJoinedRoomChanged: socket opened!');
+
+            webSocket.send(JSON.stringify({
+                "msg": "connect",
+                "version": "1",
+                "support": ["1"]
+            }))
+        };
+
+        webSocket.onmessage = async function (event) {
+            let response = JSON.parse(event.data)
+            console.log(`RocketChatClient | subscribeUserJoinedRoomChanged: onmessage: ${JSON.stringify(response)}`);
+
+            if (response.msg == 'ping') {
+                let rocketChatClient = new RocketChatClient()
+                if (!rocketChatClient.socketMap.has(subSession)) {
+                    return;
+                }
+
+                console.log('pong!');
+                webSocket.send(JSON.stringify({
+                    msg: 'pong'
+                }))
+                return
+            }
+
+            if (response.msg == 'connected') {
+
+                webSocket.send(JSON.stringify({
+                    msg: 'method',
+                    method: 'login',
+                    id: loginSession,
+                    params: [
+                        { 'resume': userHeader['X-Auth-Token'] }
+                    ]
+                }))
+                return
+            }
+
+            if (response.msg == 'result' && response.id == loginSession) {
+                
+                webSocket.send(JSON.stringify({
+                    "msg": "sub",
+                    "id": subSession,
+                    "name": "stream-notify-user",
+                    "params": [
+                        `${userId}/rooms-changed`,
+                        `${userId}/subscriptions-changed`,
+                        false
+                    ]
+
+                }))
+
+                return
+            }
+
+            if (response.msg == 'changed'
+                && response.collection == 'stream-notify-user'
+                && response.fields.eventName.includes(userId)) {
+                onMessage(response.fields.args)
+            }
+        }
+
+        this.socketMap.set(subSession, webSocket)
+
+        return subSession
+    }
+
     expireSession(sessionId) {
         if (!this.socketMap.has(sessionId)) {
             return

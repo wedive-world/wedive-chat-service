@@ -18,6 +18,9 @@ type Mutation {
     kick(roomId: String!, userId: String!): Response!
 }
 
+type Subscription {
+    subscribeUserJoinedRoomChanged: ChatRoom
+}
 # {
 #   "_id": "22nytdn4QqKvSk2Av",              // Random.id()
 #   "t": "p",                                // String           Room Type: c = chanel, d = direct, p (change to g) = group, v = visitor

@@ -4,8 +4,8 @@ const rocketChatClient = new RocketChatClient()
 const ApiClient = require("../client/api-client")
 const apiClient = new ApiClient()
 const { randomUUID } = require('crypto')
-
-const { PubSub } = require("apollo-server");
+const { PubSub } = require('graphql-subscriptions')
+// const { PubSub } = require("apollo-server");
 
 const roomTypeMap = {
     c: 'channel',
@@ -30,6 +30,13 @@ module.exports = {
     },
 
     ChatRoom: {
+        unread: async (parent, args, context, info) => {
+            if (parent.unread) {
+                return parent.unread
+            }
+
+            return await getSubscriptionByRoomId(parent._id, context.uid)
+        },
         async divingInfo(parent, args, context, info) {
             if (parent.type == 'channel') {
                 let diving = await apiClient.getDivingInfo(parent._id)
@@ -118,6 +125,35 @@ module.exports = {
 
         async kick(parent, args, context, info) {
             return await kick(context.uid, args.roomId, args.uid)
+        },
+    },
+
+    Subscription: {
+
+        subscribeUserJoinedRoomChanged: {
+            subscribe: async (parent, args, context, info) => {
+                let uid = context.uid
+                let user = await getRocketChatUserByUserName(uid)
+
+                const pubsub = new PubSub();
+
+                await rocketChatClient.subscribeUserJoinedRoomChanged(
+                    context.uid,
+                    user._id,
+                    context.sessionId,
+                    (rooms) => {
+                        rooms
+                            .map(room => convertChatRoom(room))
+                            .forEach(room => {
+                                pubsub.publish(uid, {
+                                    subscribeUserJoinedRoomChanged: room
+                                })
+                            })
+                    }
+                )
+
+                return pubsub.asyncIterator(uid)
+            }
         },
     },
 };
@@ -381,4 +417,39 @@ function convertChatRoom(rocketChatRoom) {
 
 function convertRoomType(roomType) {
     return roomTypeMap[roomType]
+}
+
+async function getRocketChatUserByUserName(userName) {
+
+    let queryParams = {
+        username: userName
+    }
+
+    let result = await rocketChatClient.get('/api/v1/users.info', rocketChatClient.getAixosAdminHeader(), queryParams)
+    if (!result.success || !result.user) {
+        console.log(`chat-user-service | getChatUserById: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return result.user
+}
+
+async function getSubscriptionByRoomId(roomId, uid) {
+
+    let queryParams = {
+        roomId: roomId
+    }
+
+    let result = await rocketChatClient.get(
+        '/api/v1/subscriptions.getOne',
+        await rocketChatClient.generateUserHeader(uid),
+        queryParams
+    )
+
+    if (!result.success || !result.subscription) {
+        console.log(`chat-user-service | getSubscriptionByRoomId: failed, result=${JSON.stringify(result)}`)
+        return null
+    }
+
+    return result.subscription.unread
 }
