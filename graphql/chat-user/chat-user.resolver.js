@@ -113,13 +113,6 @@ module.exports = {
             let chatUser = await updateUser(context.uid, args.name, args.avatarUrl)
             return chatUser
         },
-
-        async updateFcmToken(parent, args, context, info) {
-
-            console.log(`mutation | updateFcmToken: args=${JSON.stringify(args)}`)
-            let user = await updateFcmToken(args._id, args.fcmToken)
-            return user
-        },
     },
 };
 
@@ -251,29 +244,6 @@ async function updateUser(uid, name, avatarUrl) {
     return {
         success: true,
         reason: reason
-    }
-}
-
-async function updateFcmToken(uid, fcmToken) {
-
-    let userData = {
-        userId: uid,
-        data: {
-            customFields: {
-                fcmToken: fcmToken
-            }
-        }
-    }
-
-    let result = await rocketChatClient.post('/api/v1/users.update', rocketChatClient._getUserToken(uid), userData)
-    if (!result.success) {
-        console.log(`chat-user-service | updateFcmToken: failed, userResult=${JSON.stringify(result)}`)
-    }
-
-    console.log(`updateFcmToken: userResult=${JSON.stringify(result)}`)
-
-    return {
-        success: result.success
     }
 }
 
