@@ -40,6 +40,9 @@ env:
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: chat-service           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
+  GRAPHQL_KEY: ${{ secrets.GRAPHQL_KEY }}
+  APOLLO_GRAPH_REF: chat-service-jswh4l@current
+  NODE_ENV: production
 
 jobs:
   deploy:
@@ -74,7 +77,12 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+          --build-arg NODE_ENV=${{ env.NODE_ENV }} \
+          --build-arg GRAPHQL_KEY=${{ env.GRAPHQL_KEY }} \
+          --build-arg APOLLO_GRAPH_REF=${{ env.APOLLO_GRAPH_REF }} \
+          .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 

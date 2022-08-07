@@ -53,7 +53,7 @@ type Subscription {
 type ChatMessage {
     _id: String
     text: String
-    author: ChatUser
+    author: ChatUser @cacheControl(maxAge: 60)
     type: ChatMessageType
     attachments: [Attachment]
     createdAt: Date

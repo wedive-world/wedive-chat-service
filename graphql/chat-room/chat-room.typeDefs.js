@@ -57,7 +57,7 @@ type ChatRoom {
     numOfmessages: Int
     unread: Int
 
-    divingInfo: DivingInfo
+    divingInfo: DivingInfo @cacheControl(maxAge: 60)
 
     createdAt: Date
 }

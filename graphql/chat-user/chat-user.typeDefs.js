@@ -3,7 +3,7 @@ const { gql } = require('apollo-server')
 module.exports = gql`
 
 type Query {
-    getChatUserByUsername(username: String): ChatUser @cacheControl(maxAge: 30)
+    getChatUserByUsername(username: String): ChatUser @cacheControl(maxAge: 60)
     findUserByNickName(nickName: String): [ChatUser]
     getTotalUnreadByCurrentUser: Int
 }
@@ -51,7 +51,7 @@ type ChatUser {
     _id: String
     uid: String
     name: String
-    avatarOrigin: String
+    avatarOrigin: String @cacheControl(maxAge: 60)
 
     createdAt: Date
     updatedAt: Date

@@ -32,19 +32,8 @@ function applyEnvironment() {
 
   const envList = []
 
-  switch (process.env.NODE_ENV) {
-    case 'development':
-    case 'production':
-      envList.push(require('dotenv').config({ path: './wedive-secret/chat-service-config.env' }).parsed)
-      envList.push(require('dotenv').config({ path: './wedive-secret/chat-service-secret.env' }).parsed)
-
-      break;
-
-    case 'local':
-      envList.push(require('dotenv').config({ path: './wedive-secret/local/chat-service-config.env' }).parsed)
-      envList.push(require('dotenv').config({ path: './wedive-secret/local/chat-service-secret.env' }).parsed)
-      break;
-  }
+  envList.push(require('dotenv').config({ path: './wedive-secret/chat-service-config.env' }).parsed)
+  envList.push(require('dotenv').config({ path: './wedive-secret/chat-service-secret.env' }).parsed)
 
   console.log(`===========================Environment Variables===============================`)
   envList.forEach(env => {
@@ -59,6 +48,7 @@ function applyEnvironment() {
 
 async function startServer() {
 
+  const isProduction = process.env.NODE_ENV == 'production'
   const app = express();
   app.use('/healthcheck', require('express-healthcheck')())
 
@@ -119,8 +109,7 @@ async function startServer() {
 
   const server = new ApolloServer({
     schema: schema,
-    playground: true,
-    introspection: true,
+    introspection: !isProduction,
 
     context: async ({ req }) => {
       if (!req.headers.idtoken && !req.headers.uid) {
