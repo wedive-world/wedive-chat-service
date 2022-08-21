@@ -198,7 +198,7 @@ async function postMessage(senderUid, roomId, text, roomType/* attachment */) {
     let chatMessage = convertChatMessage(result.message)
     chatMessage.authorName = userInfo.user.name
     chatMessage.avatar = await apiClient.getUserProfileImage(senderUid)
-    chatMessage.unread = await getSubscriptionRoom(senderUserId, chatMessage.chatRoom)
+    chatMessage.unread = await getSubscriptionRoom(senderUid, chatMessage.chatRoom)
 
     let userUids = await getUserUidsByRoomId(roomId, roomType, senderUid)
     if (userUids && userUids.length > 0) {
