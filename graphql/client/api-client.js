@@ -47,7 +47,7 @@ class ApiClient {
             console.log(`ApiClient | getUserProfileImage: ERROR, ${err}`)
         }
 
-        return null
+        return ""
     }
 
     async getFcmTokenList(uidList) {

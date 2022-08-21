@@ -25,7 +25,7 @@ class FirebaseClient {
             console.error(e)
         }
 
-        // console.log(`FirebaseClient | sendMulticast: result=${JSON.stringify(result)}`)
+        console.log(`FirebaseClient | sendMulticast: result=${JSON.stringify(result)}`)
     }
 
     async sendMulticastInternal(tokenList, event, data) {

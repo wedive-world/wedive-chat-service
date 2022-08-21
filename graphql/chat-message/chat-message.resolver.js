@@ -85,7 +85,7 @@ module.exports = {
         async postMessageToRoom(parent, args, context, info) {
 
             console.log(`mutation | postMessageToRoom: args=${JSON.stringify(args)}`)
-            return await postMessage(context.uid, args.roomId, args.input, 'channel')
+            return await postMessage(context.uid, args.roomId, args.input)
         },
 
         async postMessageToUser(parent, args, context, info) {
@@ -97,7 +97,7 @@ module.exports = {
         async postMessageToChannel(parent, args, context, info) {
 
             console.log(`mutation | postMessageToChannel: args=${JSON.stringify(args)}`)
-            return await postMessage(context.uid, `#${args.channelId}`, args.input, 'channel')
+            return await postMessage(context.uid, `#${args.channelId}`, args.input)
         },
     },
 
@@ -171,7 +171,7 @@ async function postDirectMessage(senderUserId, targetUserId, text, /* attachment
     return chatMessage
 }
 
-async function postMessage(senderUid, roomId, text, roomType/* attachment */) {
+async function postMessage(senderUid, roomId, text/* attachment */) {
 
     let userHeader = await rocketChatClient.generateUserHeader(senderUid)
 
@@ -198,9 +198,12 @@ async function postMessage(senderUid, roomId, text, roomType/* attachment */) {
     let chatMessage = convertChatMessage(result.message)
     chatMessage.authorName = userInfo.user.name
     chatMessage.avatar = await apiClient.getUserProfileImage(senderUid)
-    chatMessage.unread = await getSubscriptionRoom(senderUid, chatMessage.chatRoom)
+    let unread = await getSubscriptionRoom(senderUid, chatMessage.chatRoom)
+    chatMessage.unread = String(unread.unread)
+    console.log(`chatMessage=${JSON.stringify(chatMessage)}`)
 
-    let userUids = await getUserUidsByRoomId(roomId, roomType, senderUid)
+    let userUids = await getUserUidsByRoomId(roomId, senderUid)
+
     if (userUids && userUids.length > 0) {
         let tokenList = await apiClient.getFcmTokenList(userUids)
         tokenList = tokenList.filter(token => token)
@@ -228,35 +231,27 @@ async function getSubscriptionRoom(uid, roomId) {
     return result.subscription
 }
 
-async function getUserUidsByRoomId(roomId, roomType, senderId) {
+async function getUserUidsByRoomId(roomId, senderUid) {
 
-    if (roomType == 'direct') {
-
-        let roomInfo = await rocketChatClient.get(
-            '/api/v1/rooms.info',
-            userHeader,
-            {
-                roomId: roomId
-            }
-        )
-
-        if (roomInfo.room.usernames && roomInfo.room.usernames.length > 0) {
-            return roomInfo.room.usernames
-                .filter(username => username != senderUid)
-        }
-
-        return null
-    } else {
-
-        let queryParams = {
+    let userHeader = await rocketChatClient.generateUserHeader(senderUid)
+    let roomInfo = await rocketChatClient.get(
+        '/api/v1/rooms.info',
+        userHeader,
+        {
             roomId: roomId
         }
+    )
+
+    console.log(`roomInfo=${JSON.stringify(roomInfo, null, 2)}`)
+
+    if (roomInfo.room.t == 'c') {
 
         let result = await rocketChatClient.get(
             '/api/v1/channels.members',
-            rocketChatClient.getAixosAdminHeader(),
-            queryParams
+            userHeader,
+            { roomId: roomId }
         )
+
         if (!result.success || !result.members) {
             console.log(`chat-message-resolver | getChannelMemberList: failed, result=${JSON.stringify(result)}`)
             return null
@@ -264,6 +259,13 @@ async function getUserUidsByRoomId(roomId, roomType, senderId) {
 
         return result.members
             .map(member => member.username)
+
+    } else if(roomInfo.room.t == 'd') {
+
+        if (roomInfo.room.usernames && roomInfo.room.usernames.length > 0) {
+            return roomInfo.room.usernames
+                .filter(username => username != senderUid)
+        }    
     }
 }
 
