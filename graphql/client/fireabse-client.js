@@ -18,14 +18,13 @@ class FirebaseClient {
         if (!tokenList || tokenList.length == 0) {
             return
         }
-        
-        try {
-            await this.sendMulticastInternal(tokenList, event, data)
-        } catch (e) {
-            console.error(e)
-        }
 
-        console.log(`FirebaseClient | sendMulticast: result=${JSON.stringify(result)}`)
+        try {
+            var result = await this.sendMulticastInternal(tokenList, event, data)
+            console.log(`FirebaseClient | sendMulticast: result=${JSON.stringify(result)}`)
+        } catch (e) {
+            console.error(`FirebaseClient | sendMulticast error: `, e)
+        }
     }
 
     async sendMulticastInternal(tokenList, event, data) {
